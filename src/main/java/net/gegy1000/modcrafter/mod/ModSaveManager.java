@@ -46,7 +46,7 @@ public class ModSaveManager
         ZipOutputStream out = new ZipOutputStream(new FileOutputStream(file));
         ZipEntry entry = new ZipEntry("mod.json");
         out.putNextEntry(entry);
-
+        
         JsonMod jsonMod = new JsonMod(mod);
         jsonMod.lastModified = System.currentTimeMillis();
 
