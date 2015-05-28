@@ -37,7 +37,7 @@ public class Sprite
 
         this.def = ModCrafterAPI.getSpriteById(jsonSprite.type);
         this.name = jsonSprite.name;
-        
+
         for (JsonScript script : jsonSprite.scripts)
         {
             Script newScript = script.toScript(this);

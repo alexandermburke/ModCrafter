@@ -43,7 +43,7 @@ public class Script
 
         Script child = getChild();
 
-        if(child != null)
+        if (child != null)
         {
             child.execute();
         }
@@ -72,12 +72,12 @@ public class Script
         this.sprite = sprite;
         this.name = def.getName();
         this.parameters = new ArrayList<IParameter>();
-        
-        if(jsonScript.parameters != null)
+
+        if (jsonScript.parameters != null)
         {
             for (Object par : jsonScript.parameters)
             {
-                parameters.add(new InputParameter(par)); //TODO save type of par? or override with hat script?
+                parameters.add(new InputParameter(par)); // TODO save type of par? or override with hat script?
             }
         }
 
@@ -107,19 +107,19 @@ public class Script
 
         this.child = getSprite().getScriptId(child);
 
-        if(child != null)
+        if (child != null)
         {
-            if(getSprite().getScriptId(this) != child.parent)
+            if (getSprite().getScriptId(this) != child.parent)
             {
                 child.setParent(this);
             }
         }
-        
-        if(oldChildId != -1)
+
+        if (oldChildId != -1)
         {
             Script oldChild = getSprite().getScript(oldChildId);
 
-            if(oldChild.getParent() != null)
+            if (oldChild.getParent() != null)
             {
                 oldChild.setParent(null);
             }
@@ -139,22 +139,22 @@ public class Script
     public void setParent(Script parent)
     {
         int oldParentId = this.parent;
-        
+
         this.parent = getSprite().getScriptId(parent);
 
-        if(parent != null)
+        if (parent != null)
         {
-            if(getSprite().getScriptId(this) != parent.child)
+            if (getSprite().getScriptId(this) != parent.child)
             {
                 parent.setChild(this);
             }
         }
-        
-        if(oldParentId != -1)
+
+        if (oldParentId != -1)
         {
             Script oldParent = getSprite().getScript(oldParentId);
 
-            if(oldParent.getChild() != null)
+            if (oldParent.getChild() != null)
             {
                 oldParent.setChild(null);
             }
@@ -172,7 +172,7 @@ public class Script
 
         String displayName = "";
 
-        if(parameters.size() > 0)
+        if (parameters.size() > 0)
         {
             int parIndex = 0;
 

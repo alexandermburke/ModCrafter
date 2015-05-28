@@ -11,6 +11,6 @@ public abstract class ScriptDef
     public abstract Object[] getName();
 
     public abstract int getColor();
-    
+
     public abstract boolean isAllowedFor(Sprite sprite);
 }

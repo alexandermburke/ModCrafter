@@ -36,7 +36,7 @@ public class GuiModCrafterProject extends GuiScreen
     private static final ResourceLocation background = new ResourceLocation("modcrafter:textures/gui/background.png");
     private static final ResourceLocation scriptTextures = new ResourceLocation("modcrafter:textures/gui/script/scripts.png");
     private static final ResourceLocation widgets = new ResourceLocation("modcrafter:textures/gui/widgets.png");
-    
+
     private Mod loadedMod;
 
     private final int scriptHeight = 11;
@@ -48,7 +48,7 @@ public class GuiModCrafterProject extends GuiScreen
     private Script snapping;
 
     private Sprite selectedSprite;
-    
+
     public GuiModCrafterProject(GuiModCrafter modCrafterGui, Mod loadedMod)
     {
         this.modCrafterGui = modCrafterGui;
@@ -60,7 +60,7 @@ public class GuiModCrafterProject extends GuiScreen
         int i = this.height / 4 + 48;
 
         selectedSprite = loadedMod.getSprite(0);
-        
+
         heldOffsetX = 0;
         heldOffsetY = 0;
 
@@ -100,17 +100,17 @@ public class GuiModCrafterProject extends GuiScreen
                 drawScript(script);
             }
         }
-        
+
         int x = 0;
         int y = 0;
-        
+
         int spriteWidth = 21;
-        
+
         for (Sprite sprite : loadedMod.getSprites())
         {
             mc.getTextureManager().bindTexture(widgets);
-            
-            if(sprite == selectedSprite)
+
+            if (sprite == selectedSprite)
             {
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             }
@@ -118,29 +118,29 @@ public class GuiModCrafterProject extends GuiScreen
             {
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
             }
-            
+
             int drawY = height - (spriteWidth * 4) + y;
-            
+
             drawTexturedModalRect(x, drawY, 0, 0, spriteWidth - 1, spriteWidth - 1);
-            
+
             String name = sprite.getName();
-            
-            if(name.length() > 15)
+
+            if (name.length() > 15)
             {
                 name = name.substring(0, 12) + "...";
             }
-            
+
             drawScaledString(mc, name, x + 1, drawY + 17, 0xFFFFFF, 0.25F);
-            
+
             x += spriteWidth;
-            
-            if(x > spriteWidth * 2)
+
+            if (x > spriteWidth * 2)
             {
                 x = 0;
                 y += spriteWidth;
             }
         }
-        
+
         super.drawScreen(p_73863_1_, p_73863_2_, p_73863_3_);
     }
 
@@ -223,13 +223,13 @@ public class GuiModCrafterProject extends GuiScreen
 
             for (Script script : selectedSprite.getScripts())
             {
-                if(script != holdingScript)
+                if (script != holdingScript)
                 {
                     if (Math.abs(y - (script.getY() + scriptHeight)) <= 4)
                     {
                         int sWidth = getWidth(script.getDisplayName());
-                        
-                        if(x > script.getX() - 4 && x + sWidth < script.getX() + sWidth + 4)
+
+                        if (x > script.getX() - 4 && x + sWidth < script.getX() + sWidth + 4)
                         {
                             x = script.getX();
                             y = script.getY() + scriptHeight - 1;
@@ -248,11 +248,11 @@ public class GuiModCrafterProject extends GuiScreen
 
     private void moveChild(Script script, int x, int y)
     {
-        if(script.getChild() != null)
+        if (script.getChild() != null)
         {
             y += scriptHeight - 1;
 
-            script.getChild().setPosition(x, y );
+            script.getChild().setPosition(x, y);
 
             moveChild(script.getChild(), x, y);
         }
@@ -276,7 +276,7 @@ public class GuiModCrafterProject extends GuiScreen
                     if (mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + scriptHeight)
                     {
                         holdingScript = script;
-                        
+
                         heldOffsetX = x - mouseX;
                         heldOffsetY = y - mouseY;
 
@@ -287,29 +287,29 @@ public class GuiModCrafterProject extends GuiScreen
                 }
             }
         }
-        
+
         int x = 0;
         int y = 0;
-        
+
         int spriteWidth = 21;
-        
+
         for (Sprite sprite : loadedMod.getSprites())
         {
             int drawY = height - (spriteWidth * 4) + y;
-            
-            if(mouseX < x + spriteWidth - 1 && mouseX > x)
+
+            if (mouseX < x + spriteWidth - 1 && mouseX > x)
             {
-                if(mouseY > drawY && mouseY < drawY + spriteWidth)
+                if (mouseY > drawY && mouseY < drawY + spriteWidth)
                 {
                     selectedSprite = sprite;
-                    
+
                     break;
                 }
             }
-            
+
             x += spriteWidth;
-            
-            if(x > spriteWidth * 2)
+
+            if (x > spriteWidth * 2)
             {
                 x = 0;
                 y += spriteWidth;
@@ -321,7 +321,7 @@ public class GuiModCrafterProject extends GuiScreen
     {
         super.mouseMovedOrUp(mouseX, mouseY, event);
 
-        if(holdingScript != null)
+        if (holdingScript != null)
         {
             holdingScript.setParent(snapping);
         }

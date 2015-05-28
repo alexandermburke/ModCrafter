@@ -21,7 +21,7 @@ public class JsonScript
     public int y;
 
     public List<Object> parameters = new ArrayList<Object>();
-    
+
     public JsonScript(Script script)
     {
         Sprite sprite = script.getSprite();
@@ -31,7 +31,7 @@ public class JsonScript
         this.childId = sprite.getScriptId(script.getChild());
         this.x = script.getX();
         this.y = script.getY();
-        
+
         for (IParameter par : script.getParameters())
         {
             this.parameters.add(par.getData());

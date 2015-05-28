@@ -31,7 +31,7 @@ public class ModSaveManager
 {
     public static final String modFormat = ".mcmod";
     private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    
+
     public static void saveMod(Mod mod) throws IOException
     {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -46,7 +46,7 @@ public class ModSaveManager
         ZipOutputStream out = new ZipOutputStream(new FileOutputStream(file));
         ZipEntry entry = new ZipEntry("mod.json");
         out.putNextEntry(entry);
-        
+
         JsonMod jsonMod = new JsonMod(mod);
         jsonMod.lastModified = System.currentTimeMillis();
 
@@ -56,7 +56,7 @@ public class ModSaveManager
         out.closeEntry();
         out.close();
     }
-    
+
     private static void makeTestProject(Mod mod)
     {
         mod.getSprites().clear();
@@ -77,7 +77,7 @@ public class ModSaveManager
     public static List<Mod> discoverMods()
     {
         List<Mod> mods = Lists.newArrayList();
-        
+
         File modsDirectory = new File(ModCrafter.proxy.getModsFile(), "modcrafter");
 
         try
@@ -121,7 +121,7 @@ public class ModSaveManager
         }
 
         Collections.sort(mods);
-        
+
         return mods;
     }
 }
