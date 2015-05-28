@@ -1,0 +1,16 @@
+[
+{
+  "modid": "modcrafter",
+  "name": "ModCrafter",
+  "description": "A Mod heavily based off of Scratch (scratch.mit.edu) that allows you to make mods with ease.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["gegy1000"],
+  "credits": "The Scratch Team for everything they have done on Scratch, that has inspired me to make this mod!",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
