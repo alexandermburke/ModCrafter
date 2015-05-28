@@ -104,11 +104,20 @@ public class GuiModCrafterProject extends GuiScreen
         int x = 0;
         int y = 0;
         
-        int spriteWidth = 26;
+        int spriteWidth = 21;
         
         for (Sprite sprite : loadedMod.getSprites())
         {
             mc.getTextureManager().bindTexture(widgets);
+            
+            if(sprite == selectedSprite)
+            {
+                GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            }
+            else
+            {
+                GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
+            }
             
             int drawY = height - (spriteWidth * 4) + y;
             
@@ -116,16 +125,16 @@ public class GuiModCrafterProject extends GuiScreen
             
             String name = sprite.getName();
             
-            if(name.length() > 8)
+            if(name.length() > 15)
             {
-                name = name.substring(0, 7) + "..";
+                name = name.substring(0, 12) + "...";
             }
             
-            drawScaledString(mc, name, x + 1, drawY + 15, 0xFFFFFF, 0.5F);
+            drawScaledString(mc, name, x + 1, drawY + 17, 0xFFFFFF, 0.25F);
             
             x += spriteWidth;
             
-            if(x > spriteWidth * 3)
+            if(x > spriteWidth * 2)
             {
                 x = 0;
                 y += spriteWidth;
@@ -276,6 +285,34 @@ public class GuiModCrafterProject extends GuiScreen
                         break;
                     }
                 }
+            }
+        }
+        
+        int x = 0;
+        int y = 0;
+        
+        int spriteWidth = 21;
+        
+        for (Sprite sprite : loadedMod.getSprites())
+        {
+            int drawY = height - (spriteWidth * 4) + y;
+            
+            if(mouseX < x + spriteWidth - 1 && mouseX > x)
+            {
+                if(mouseY > drawY && mouseY < drawY + spriteWidth)
+                {
+                    selectedSprite = sprite;
+                    
+                    break;
+                }
+            }
+            
+            x += spriteWidth;
+            
+            if(x > spriteWidth * 2)
+            {
+                x = 0;
+                y += spriteWidth;
             }
         }
     }

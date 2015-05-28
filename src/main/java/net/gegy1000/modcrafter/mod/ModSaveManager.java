@@ -61,7 +61,7 @@ public class ModSaveManager
     {
         mod.getSprites().clear();
 
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 12; i++)
         {
             Sprite sprite = new Sprite(ModCrafterAPI.getSpriteById("sprite_item"), mod, "Test Sprite" + RandomStringUtils.randomAscii(5));
             sprite.addScript(new Script(sprite, new ScriptDefPrintConsole(), null));
