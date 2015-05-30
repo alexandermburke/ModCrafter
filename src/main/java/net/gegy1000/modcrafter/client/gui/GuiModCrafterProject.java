@@ -102,7 +102,7 @@ public class GuiModCrafterProject extends GuiScreen
         GL11.glEnable(GL11.GL_BLEND);
         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        
+
         for (Sprite sprite : loadedMod.getSprites())
         {
             mc.getTextureManager().bindTexture(widgets);
@@ -137,7 +137,7 @@ public class GuiModCrafterProject extends GuiScreen
                 y += spriteWidth;
             }
         }
-        
+
         if (selectedSprite != null) // TODO selected sprite selection
         {
             for (Script script : selectedSprite.getScripts())
@@ -191,22 +191,20 @@ public class GuiModCrafterProject extends GuiScreen
         {
             drawTexturedModalRect(xPosition, yPosition, 12, 0, 7, 12);
 
-            int quaterWidth = width / 4;
-            
-            for (int i = 0; i < quaterWidth; i++)
+            for (int i = 0; i < 5; i++)
             {
-                drawTexturedModalRect(xPosition + 7 + (i), yPosition, 19, 0, 1, 12);
+                drawTexturedModalRect(xPosition + 7 + i, yPosition, 19, 0, 1, 12);
             }
-            
-            drawTexturedModalRect(xPosition + 7 + quaterWidth, yPosition, 20, 0, 1, 12);
-            
-            for (int i = quaterWidth; i < width; i++)
+
+            drawTexturedModalRect(xPosition + 12, yPosition, 20, 0, 1, 12);
+
+            for (int i = 5; i < width; i++)
             {
                 drawTexturedModalRect(xPosition + 7 + (i), yPosition, 21, 0, 1, 12);
             }
-            
+
             drawTexturedModalRect(xPosition + 7 + width, yPosition, 22, 0, 1, 12);
-            
+
             yPosition++;
         }
         else
@@ -228,7 +226,7 @@ public class GuiModCrafterProject extends GuiScreen
     {
         return (int) ((float) fontRendererObj.getStringWidth(displayName) * 0.5F) - 5;
     }
-    
+
     private int getWidth(String displayName)
     {
         return (int) ((float) fontRendererObj.getStringWidth(displayName) * 0.5F);
@@ -251,13 +249,13 @@ public class GuiModCrafterProject extends GuiScreen
             int y = mouseY + heldOffsetY;
 
             snapping = null;
-            
+
             for (Script script : selectedSprite.getScripts())
             {
                 if (script != holdingScript && holdingScript.getScriptDef().canAttachTo(script) && (script.getChild() == null || script.getChild() == holdingScript))
                 {
                     int yDiff = Math.abs(y - (script.getY() + scriptHeight));
-                    
+
                     if (yDiff <= 4)
                     {
                         int sWidth = getWidth(script.getDisplayName());
@@ -268,15 +266,15 @@ public class GuiModCrafterProject extends GuiScreen
                             y = script.getY() + scriptHeight - 1;
 
                             snapping = script;
-                            
+
                             break;
                         }
                     }
                 }
             }
-            
+
             moveChild(holdingScript, x, y);
-            
+
             holdingScript.setPosition(x, y);
         }
     }
@@ -286,7 +284,7 @@ public class GuiModCrafterProject extends GuiScreen
         if (script.getChild() != null)
         {
             y += scriptHeight - 1;
-            
+
             script.getChild().setPosition(x, y);
 
             moveChild(script.getChild(), x, y);
@@ -355,14 +353,14 @@ public class GuiModCrafterProject extends GuiScreen
     private void drawRect(int x, int y, int sizeX, int sizeY, float r, float g, float b, float a)
     {
         GL11.glDisable(GL11.GL_TEXTURE_2D);
-        
+
         GL11.glColor4f(r, g, b, a);
-        
+
         drawTexturedModalRect(x, y, 0, 0, sizeX, sizeY);
-        
+
         GL11.glEnable(GL11.GL_TEXTURE_2D);
     }
-    
+
     protected void mouseMovedOrUp(int mouseX, int mouseY, int event)
     {
         super.mouseMovedOrUp(mouseX, mouseY, event);
