@@ -13,7 +13,7 @@ public class ScriptDefHatTest extends ScriptDefHat
     @Override
     public Object[] getName()
     {
-        return new Object[]{ "Hat Test Block With Really Long Text" };
+        return new Object[]{ "Hat Test" };
     }
 
     @Override
