@@ -94,7 +94,13 @@ public class GuiModCrafterProject extends GuiScreen
     public void drawScreen(int p_73863_1_, int p_73863_2_, float p_73863_3_)
     {
         this.drawDefaultBackground();
-        this.drawCenteredString(this.fontRendererObj, selectedSprite == null ? "ModCrafter" : "ModCrafter - " + selectedSprite.getName(), this.width / 2, 5, 0xFFFFFFFF);
+        
+        String spriteType = selectedSprite.getSpriteDef().getDisplayName();
+        
+        String title = selectedSprite == null ? "ModCrafter" : selectedSprite.getName() + " - " + loadedMod.getName();
+       
+        this.drawScaledString(mc, title, 88, 2, 0xFFFFFF, 0.75F);
+        this.drawScaledString(mc, spriteType, width - getScaledStringWidth(spriteType, 0.75F) - 1, 2, 0xFFFFFF, 0.75F);
 
         GL11.glEnable(GL11.GL_BLEND);
         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
@@ -103,7 +109,7 @@ public class GuiModCrafterProject extends GuiScreen
         drawSprites();
         drawScriptSidebar();
         
-        if (selectedSprite != null) // TODO selected sprite selection
+        if (selectedSprite != null)
         {
             for (Entry<Integer, Script> script : selectedSprite.getScripts().entrySet())
             {
@@ -150,7 +156,7 @@ public class GuiModCrafterProject extends GuiScreen
     
     public void drawScript(ScriptDef def, int xPosition, int yPosition, String displayName, float alpha)
     {
-        int width = getDrawWidth(displayName);
+        int width = getScriptDrawWidth(displayName);
 
         int colour = def.getColor();
 
@@ -197,14 +203,19 @@ public class GuiModCrafterProject extends GuiScreen
         drawScaledString(mc, displayName, xPosition + 2, yPosition + 3, 0xFFFFFF, 0.5F);
     }
 
-    private int getDrawWidth(String displayName)
+    private int getScriptDrawWidth(String displayName)
     {
         return (int) ((float) fontRendererObj.getStringWidth(displayName) * 0.5F) - 5;
     }
 
-    private int getWidth(String displayName)
+    private int getScriptWidth(String displayName)
     {
         return (int) ((float) fontRendererObj.getStringWidth(displayName) * 0.5F);
+    }
+    
+    private int getScaledStringWidth(String displayName, float scale)
+    {
+        return (int) ((float) fontRendererObj.getStringWidth(displayName) * (float) scale);
     }
 
     private void drawScaledString(Minecraft mc, String text, float x, float y, int color, float scale)
@@ -235,7 +246,7 @@ public class GuiModCrafterProject extends GuiScreen
 
                     if (yDiff <= 4)
                     {
-                        int sWidth = getWidth(script.getDisplayName());
+                        int sWidth = getScriptWidth(script.getDisplayName());
 
                         if (x > script.getX() - 4 && x + sWidth < script.getX() + sWidth + 4)
                         {
@@ -280,7 +291,7 @@ public class GuiModCrafterProject extends GuiScreen
                 {
                     Script script = entry.getValue();
                     
-                    int width = getWidth(script.getDisplayName());
+                    int width = getScriptWidth(script.getDisplayName());
 
                     int x = script.getX();
                     int y = script.getY();
@@ -306,7 +317,7 @@ public class GuiModCrafterProject extends GuiScreen
                     {
                         ScriptDef def = entry.getValue();
                         
-                        int width = getWidth(def.getDefualtDisplayName());
+                        int width = getScriptWidth(def.getDefualtDisplayName());
 
                         if (mouseX >= 2 && mouseX <= width && mouseY >= y && mouseY <= y + scriptHeight)
                         {
@@ -394,11 +405,12 @@ public class GuiModCrafterProject extends GuiScreen
         drawRect(85, 0, 1, height, 1.0F, 1.0F, 1.0F, 0.2F);
         drawRect(0, height - 66, 85, 1, 1.0F, 1.0F, 1.0F, 0.2F);
         
+        drawRect(0, 9, 85, 1, 1.0F, 1.0F, 1.0F, 0.2F);
+        drawRect(86, 9, width - 86, 1, 1.0F, 1.0F, 1.0F, 0.2F);
+        
         if(selectedSprite != null)
         {
             drawScaledString(mc, "Script Selection", 2, 2, 0xFFFFFF, 0.75F);
-            
-            drawRect(0, 9, 85, 1, 1.0F, 1.0F, 1.0F, 0.2F);
             
             int y = 12;
             

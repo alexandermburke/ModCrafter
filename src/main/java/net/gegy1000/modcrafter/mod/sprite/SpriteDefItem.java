@@ -9,4 +9,10 @@ public class SpriteDefItem extends SpriteDef
     {
         return "sprite_item";
     }
+
+    @Override
+    public String getDisplayName()
+    {
+        return "Item";
+    }
 }
