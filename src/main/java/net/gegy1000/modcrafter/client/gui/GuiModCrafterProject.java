@@ -94,7 +94,7 @@ public class GuiModCrafterProject extends GuiScreen
     public void drawScreen(int p_73863_1_, int p_73863_2_, float p_73863_3_)
     {
         this.drawDefaultBackground();
-        this.drawCenteredString(this.fontRendererObj, "ModCrafter - " + loadedMod.getName(), this.width / 2, 5, 0xFFFFFFFF);
+        this.drawCenteredString(this.fontRendererObj, selectedSprite == null ? "ModCrafter" : "ModCrafter - " + selectedSprite.getName(), this.width / 2, 5, 0xFFFFFFFF);
 
         GL11.glEnable(GL11.GL_BLEND);
         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
@@ -300,7 +300,7 @@ public class GuiModCrafterProject extends GuiScreen
                 
                 if(holdingScript == null)
                 {
-                    int y = 2;
+                    int y = 12;
                     
                     for (Entry<String, ScriptDef> entry : ModCrafterAPI.getScriptDefs().entrySet())
                     {
@@ -396,7 +396,11 @@ public class GuiModCrafterProject extends GuiScreen
         
         if(selectedSprite != null)
         {
-            int y = 2;
+            drawScaledString(mc, "Script Selection", 2, 2, 0xFFFFFF, 0.75F);
+            
+            drawRect(0, 9, 85, 1, 1.0F, 1.0F, 1.0F, 0.2F);
+            
+            int y = 12;
             
             for (Entry<String, ScriptDef> entry : ModCrafterAPI.getScriptDefs().entrySet())
             {
