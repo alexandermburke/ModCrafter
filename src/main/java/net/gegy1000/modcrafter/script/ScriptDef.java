@@ -13,4 +13,9 @@ public abstract class ScriptDef
     public abstract int getColor();
 
     public abstract boolean isAllowedFor(Sprite sprite);
+    
+    public boolean canAttachTo(Script script)
+    {
+        return true;
+    }
 }

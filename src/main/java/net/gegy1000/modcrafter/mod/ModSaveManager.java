@@ -21,6 +21,7 @@ import net.gegy1000.modcrafter.ModCrafterAPI;
 import net.gegy1000.modcrafter.json.JsonMod;
 import net.gegy1000.modcrafter.mod.sprite.Sprite;
 import net.gegy1000.modcrafter.script.Script;
+import net.gegy1000.modcrafter.script.ScriptDefHatTest;
 import net.gegy1000.modcrafter.script.ScriptDefPrintConsole;
 
 import com.google.common.collect.Lists;
@@ -43,6 +44,8 @@ public class ModSaveManager
             file.createNewFile();
         }
 
+        makeTestProject(mod);
+        
         ZipOutputStream out = new ZipOutputStream(new FileOutputStream(file));
         ZipEntry entry = new ZipEntry("mod.json");
         out.putNextEntry(entry);
@@ -69,6 +72,9 @@ public class ModSaveManager
             Script script2 = new Script(sprite, new ScriptDefPrintConsole(), null);
             script2.getParameter(0).setData("Another Block");
             sprite.addScript(script2);
+            
+            Script script3 = new Script(sprite, new ScriptDefHatTest(), null);
+            sprite.addScript(script3);
 
             mod.addSprite(sprite);
         }

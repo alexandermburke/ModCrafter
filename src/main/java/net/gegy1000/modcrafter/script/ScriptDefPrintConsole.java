@@ -20,7 +20,7 @@ public class ScriptDefPrintConsole extends ScriptDef
     @Override
     public Object[] getName()
     {
-        return new Object[] { "Print Console", new InputParameter("Hello World") };
+        return new Object[] { "print", new InputParameter("Hello World"), "to console"};
     }
 
     @Override

@@ -172,24 +172,21 @@ public class Script
 
         String displayName = "";
 
-        if (parameters.size() > 0)
+        int parIndex = 0;
+
+        for (Object namePart : name)
         {
-            int parIndex = 0;
-
-            for (Object namePart : name)
+            if (namePart instanceof IParameter)
             {
-                if (namePart instanceof IParameter)
-                {
-                    displayName += getParameter(parIndex).getData();
-                    parIndex++;
-                }
-                else
-                {
-                    displayName += namePart;
-                }
-
-                displayName += " ";
+                displayName += getParameter(parIndex).getData();
+                parIndex++;
             }
+            else
+            {
+                displayName += namePart;
+            }
+
+            displayName += " ";
         }
 
         return displayName;
