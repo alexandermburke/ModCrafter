@@ -16,48 +16,51 @@ buildscript {
 }
 
 apply plugin: 'forge'
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
 
-version = "0.1.0"
-group= "net.gegy1000.modcrafter" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "modcrafter"
+version = "0.1.0-1.7.10"
+group = "net.gegy1000.modcrafter"
+archivesBaseName = "ModCrafter"
 
 minecraft {
-    version = "1.7.10-10.13.3.1395-1710ls"
-    runDir = "eclipse"
+    version = "1.7.10-10.13.3.1401-1710ls"
+    runDir = "minecraft"
+    replace '${version}', project.version
 }
 
-dependencies {
-    // you may put jars on which you depend on in ./libs
-    // or you may define them like so..
-    //compile "some.group:artifact:version:classifier"
-    //compile "some.group:artifact:version"
-      
-    // real examples
-    //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-    //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
-
-    // for more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
-}
-
-processResources
-{
-    // this will ensure that this task is redone when the versions change.
+processResources {
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
 
-    // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-                
-        // replace version and mcversion
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
         
-    // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+}
+
+task docJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'doc'
+    from javadoc.destinationDir
+}
+
+jar {
+}
+
+task devJar(type: Jar) {
+    classifier = 'dev'
+    from sourceSets.main.output
+}
+
+task srcJar(type: Jar, dependsOn: classes) {
+    classifier = 'src'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives devJar, srcJar, docJar
 }
