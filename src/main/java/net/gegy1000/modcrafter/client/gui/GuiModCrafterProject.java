@@ -94,19 +94,15 @@ public class GuiModCrafterProject extends GuiScreen
         this.drawDefaultBackground();
         this.drawCenteredString(this.fontRendererObj, "ModCrafter - " + loadedMod.getName(), this.width / 2, 5, 0xFFFFFFFF);
 
-        if (selectedSprite != null) // TODO selected sprite selection
-        {
-            for (Script script : selectedSprite.getScripts())
-            {
-                drawScript(script);
-            }
-        }
-
         int x = 0;
         int y = 0;
 
         int spriteWidth = 21;
 
+        GL11.glEnable(GL11.GL_BLEND);
+        OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        
         for (Sprite sprite : loadedMod.getSprites())
         {
             mc.getTextureManager().bindTexture(widgets);
@@ -139,6 +135,14 @@ public class GuiModCrafterProject extends GuiScreen
             {
                 x = 0;
                 y += spriteWidth;
+            }
+        }
+        
+        if (selectedSprite != null) // TODO selected sprite selection
+        {
+            for (Script script : selectedSprite.getScripts())
+            {
+                drawScript(script);
             }
         }
 
@@ -182,10 +186,6 @@ public class GuiModCrafterProject extends GuiScreen
         GL11.glColor4f(r, g, b, 1.0F);
 
         mc.renderEngine.bindTexture(scriptTextures);
-
-        GL11.glEnable(GL11.GL_BLEND);
-        OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
         if (script.getScriptDef() instanceof ScriptDefHat)
         {

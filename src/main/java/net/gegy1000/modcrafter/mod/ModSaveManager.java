@@ -43,8 +43,6 @@ public class ModSaveManager
         {
             file.createNewFile();
         }
-
-        makeTestProject(mod);
         
         ZipOutputStream out = new ZipOutputStream(new FileOutputStream(file));
         ZipEntry entry = new ZipEntry("mod.json");
