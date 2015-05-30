@@ -172,14 +172,11 @@ public class Script
 
         String displayName = "";
 
-        int parIndex = 0;
-
         for (Object namePart : name)
         {
             if (namePart instanceof IParameter)
             {
-                displayName += getParameter(parIndex).getData();
-                parIndex++;
+                displayName += ((IParameter) namePart).getData();
             }
             else
             {

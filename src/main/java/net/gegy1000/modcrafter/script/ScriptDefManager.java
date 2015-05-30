@@ -9,7 +9,10 @@ public class ScriptDefManager
     
     public static void init()
     {
-        ModCrafterAPI.registerScriptDef(printConsole);
+        //Hats
         ModCrafterAPI.registerScriptDef(hatTest);
+        
+        //Blocks
+        ModCrafterAPI.registerScriptDef(printConsole);
     }
 }

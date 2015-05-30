@@ -66,14 +66,6 @@ public class ModSaveManager
         for (int i = 0; i < 12; i++)
         {
             Sprite sprite = new Sprite(ModCrafterAPI.getSpriteById("sprite_item"), mod, "Test Sprite" + RandomStringUtils.randomAscii(5));
-            sprite.addScript(new Script(sprite, ScriptDefManager.printConsole, null));
-
-            Script script2 = new Script(sprite, ScriptDefManager.printConsole, null);
-            script2.getParameter(0).setData("Another Block");
-            sprite.addScript(script2);
-            
-            Script script3 = new Script(sprite, ScriptDefManager.hatTest, null);
-            sprite.addScript(script3);
 
             mod.addSprite(sprite);
         }

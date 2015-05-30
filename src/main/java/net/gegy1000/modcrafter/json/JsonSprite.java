@@ -1,7 +1,10 @@
 package net.gegy1000.modcrafter.json;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import net.gegy1000.modcrafter.mod.Mod;
 import net.gegy1000.modcrafter.mod.sprite.Sprite;
@@ -11,7 +14,7 @@ public class JsonSprite
 {
     public String name;
 
-    public List<JsonScript> scripts;
+    public Map<Integer, JsonScript> scripts;
 
     public String type;
 
@@ -19,13 +22,13 @@ public class JsonSprite
     {
         this.name = sprite.getName();
 
-        this.scripts = new ArrayList<JsonScript>();
+        this.scripts = new HashMap<Integer, JsonScript>();
 
         this.type = sprite.getSpriteDef().getId();
 
-        for (Script script : sprite.getScripts())
+        for (Entry<Integer, Script> script : sprite.getScripts().entrySet())
         {
-            scripts.add(new JsonScript(script));
+            scripts.put(script.getKey(), new JsonScript(script.getValue()));
         }
     }
 

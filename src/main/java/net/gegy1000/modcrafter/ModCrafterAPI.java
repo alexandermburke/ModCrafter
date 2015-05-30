@@ -30,4 +30,9 @@ public class ModCrafterAPI
     {
         return registeredSpriteTypes.get(id);
     }
+
+    public static Map<String, ScriptDef> getScriptDefs()
+    {
+        return registeredScriptTypes;
+    }
 }
