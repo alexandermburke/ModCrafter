@@ -254,7 +254,7 @@ public class GuiModCrafterProject extends GuiScreen
             
             for (Script script : selectedSprite.getScripts())
             {
-                if (script != holdingScript && holdingScript.getScriptDef().canAttachTo(script))
+                if (script != holdingScript && holdingScript.getScriptDef().canAttachTo(script) && (script.getChild() == null || script.getChild() == holdingScript))
                 {
                     int yDiff = Math.abs(y - (script.getY() + scriptHeight));
                     
