@@ -251,10 +251,6 @@ public class GuiModCrafterProject extends GuiScreen
             int y = mouseY + heldOffsetY;
 
             snapping = null;
-
-            int closest = Integer.MAX_VALUE;
-            
-            Script closestScript = null;
             
             for (Script script : selectedSprite.getScripts())
             {
@@ -271,11 +267,9 @@ public class GuiModCrafterProject extends GuiScreen
                             x = script.getX();
                             y = script.getY() + scriptHeight - 1;
 
-                            if(closest > yDiff)
-                            {
-                                closest = yDiff;
-                                closestScript = script;
-                            }
+                            snapping = script;
+                            
+                            break;
                         }
                     }
                 }
@@ -283,11 +277,6 @@ public class GuiModCrafterProject extends GuiScreen
             
             moveChild(holdingScript, x, y);
             
-            if(closestScript != null)
-            {
-                snapping = closestScript;
-            }
-
             holdingScript.setPosition(x, y);
         }
     }

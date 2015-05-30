@@ -154,7 +154,7 @@ public class Script
         {
             Script oldParent = getSprite().getScript(oldParentId);
 
-            if (oldParent.getChild() != null)
+            if (oldParent.getChild() != null && oldParent != parent)
             {
                 oldParent.setChild(null);
             }
