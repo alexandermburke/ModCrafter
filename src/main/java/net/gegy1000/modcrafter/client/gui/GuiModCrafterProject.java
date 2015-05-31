@@ -215,7 +215,7 @@ public class GuiModCrafterProject extends GuiScreen
 
                 if(inputParameter.getDataType() == DataType.TEXT)
                 {
-                    drawRect(x - 1, yPosition + 2, textWidth + 1, 6, 1F, 1F, 1F, 0.9F);
+                    drawRect(x - 1, yPosition + 2, textWidth + 1, 6, 1F, 1F, 1F, 0.9F * alpha);
                 }
 
                 drawScaledString(mc, string, x, yPosition + 3, 0xD8D8D8, 0.5F);
