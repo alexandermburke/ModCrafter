@@ -1,29 +1,26 @@
 package net.gegy1000.modcrafter.client.gui;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map.Entry;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
-import net.gegy1000.modcrafter.ModCrafter;
 import net.gegy1000.modcrafter.ModCrafterAPI;
-import net.gegy1000.modcrafter.json.JsonMod;
+import net.gegy1000.modcrafter.client.gui.element.Element;
+import net.gegy1000.modcrafter.client.gui.element.ElementSidebar;
+import net.gegy1000.modcrafter.client.gui.element.ElementSprites;
+import net.gegy1000.modcrafter.client.gui.element.ElementTopBar;
+import net.gegy1000.modcrafter.color.ColorHelper;
 import net.gegy1000.modcrafter.mod.Mod;
 import net.gegy1000.modcrafter.mod.ModSaveManager;
 import net.gegy1000.modcrafter.mod.sprite.Sprite;
 import net.gegy1000.modcrafter.script.Script;
 import net.gegy1000.modcrafter.script.ScriptDef;
 import net.gegy1000.modcrafter.script.ScriptDefHat;
-import net.gegy1000.modcrafter.script.ScriptDefPrintConsole;
 import net.gegy1000.modcrafter.script.parameter.DataType;
-import net.gegy1000.modcrafter.script.parameter.IParameter;
 import net.gegy1000.modcrafter.script.parameter.InputParameter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
@@ -31,30 +28,35 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.common.collect.Lists;
 
 public class GuiModCrafterProject extends GuiScreen
 {
-    private GuiModCrafter modCrafterGui;
+	public GuiModCrafter modCrafterGui;
+	public int backgroundColor = 0x969696;
+	public ArrayList<Element> elements = Lists.newArrayList();
 
-    private static final ResourceLocation background = new ResourceLocation("modcrafter:textures/gui/background.png");
-    private static final ResourceLocation scriptTextures = new ResourceLocation("modcrafter:textures/gui/script/scripts.png");
-    private static final ResourceLocation widgets = new ResourceLocation("modcrafter:textures/gui/widgets.png");
-
-    //GuiTextField
+    public static final ResourceLocation background = new ResourceLocation("modcrafter:textures/gui/background.png");
+    public static final ResourceLocation scriptTextures = new ResourceLocation("modcrafter:textures/gui/script/scripts.png");
+    public static final ResourceLocation widgets = new ResourceLocation("modcrafter:textures/gui/widgets.png");
     
-    private Mod loadedMod;
+    
+    public Mod loadedMod;
 
-    private final int scriptHeight = 11;
+    public final int scriptHeight = 11;
+    public final int spriteWidth = 21;
 
-    private Script holdingScript;
+    public Script holdingScript;
 
-    private int heldOffsetX, heldOffsetY;
+    public int heldOffsetX, heldOffsetY;
 
-    private Script snapping;
+    public Script snapping;
 
-    private Sprite selectedSprite;
+    public Sprite selectedSprite;
+    
+    public ElementSidebar elementScriptSidebar;
+    public ElementSprites elementSprites;
+    public ElementTopBar elementTopBar;
 
     public GuiModCrafterProject(GuiModCrafter modCrafterGui, Mod loadedMod)
     {
@@ -72,6 +74,12 @@ public class GuiModCrafterProject extends GuiScreen
         heldOffsetY = 0;
 
         this.buttonList.add(new GuiModCrafterButton(0, this.width - 80, this.height - 10 - 20, 72, 20, I18n.format("gui.done", new Object[0])));
+        
+        
+        this.elements.clear();
+        this.elements.add(this.elementScriptSidebar = new ElementSidebar(this, 0, 0, elementScriptSidebar == null ? 85 : elementScriptSidebar.width, height));
+        this.elements.add(this.elementSprites = new ElementSprites(this, 0, elementSprites == null ? height - 66 : elementSprites.yPosition, elementScriptSidebar.width, elementSprites == null ? height - (height - 66) : elementSprites.height));
+        this.elements.add(this.elementTopBar = new ElementTopBar(this, elementScriptSidebar.width, 0, width - elementScriptSidebar.width, 10));
     }
 
     public void actionPerformed(GuiButton button)
@@ -95,24 +103,22 @@ public class GuiModCrafterProject extends GuiScreen
     /**
      * Draws the screen and all the components in it.
      */
-    public void drawScreen(int p_73863_1_, int p_73863_2_, float p_73863_3_)
+    public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        this.drawDefaultBackground();
-
-        String spriteType = selectedSprite.getSpriteDef().getDisplayName();
-
-        String title = selectedSprite == null ? "ModCrafter" : selectedSprite.getName() + " - " + loadedMod.getName();
-
-        this.drawScaledString(mc, title, 88, 2, 0xFFFFFF, 0.75F);
-        this.drawScaledString(mc, spriteType, width - getScaledStringWidth(spriteType, 0.75F) - 1, 2, 0xFFFFFF, 0.75F);
-
+    	GL11.glDisable(GL11.GL_TEXTURE_2D);
+    	ColorHelper.setColorFromInt(backgroundColor, 1.0F);
+        drawTexturedModalRect(0, 0, 0, 0, width, height);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        
         GL11.glEnable(GL11.GL_BLEND);
         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-        drawSprites();
-        drawScriptSidebar();
-
+        
+        for (Element element : elements)
+        {
+        	element.drawScreen(mouseX, mouseY, partialTicks);
+        }
+        
         if (selectedSprite != null)
         {
             for (Entry<Integer, Script> script : selectedSprite.getScripts().entrySet())
@@ -121,27 +127,7 @@ public class GuiModCrafterProject extends GuiScreen
             }
         }
 
-        super.drawScreen(p_73863_1_, p_73863_2_, p_73863_3_);
-    }
-
-    /**
-     * Draws the background (i is always 0 as of 1.2.2)
-     */
-    public void drawBackground(int p_146278_1_)
-    {
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glDisable(GL11.GL_FOG);
-        Tessellator tessellator = Tessellator.instance;
-        this.mc.getTextureManager().bindTexture(background);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        float f = 32.0F;
-        tessellator.startDrawingQuads();
-        // tessellator.setColorOpaque_I(4210752);
-        tessellator.addVertexWithUV(0.0D, (double) this.height, 0.0D, 0.0D, (double) ((float) this.height / f + (float) p_146278_1_));
-        tessellator.addVertexWithUV((double) this.width, (double) this.height, 0.0D, (double) ((float) this.width / f), (double) ((float) this.height / f + (float) p_146278_1_));
-        tessellator.addVertexWithUV((double) this.width, 0.0D, 0.0D, (double) ((float) this.width / f), (double) p_146278_1_);
-        tessellator.addVertexWithUV(0.0D, 0.0D, 0.0D, 0.0D, (double) p_146278_1_);
-        tessellator.draw();
+        super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
     public void drawScript(Script script)
@@ -150,7 +136,7 @@ public class GuiModCrafterProject extends GuiScreen
 
         float alpha = 1.0F;
 
-        if((script.equals(holdingScript) && snapping != null) || x < 85)
+        if((script.equals(holdingScript) && snapping != null) || x < elementScriptSidebar.width)
         {
             alpha = 0.8F;
         }
@@ -244,7 +230,7 @@ public class GuiModCrafterProject extends GuiScreen
         return (int) ((float) fontRendererObj.getStringWidth(displayName) * 0.5F);
     }
 
-    private int getScaledStringWidth(String displayName, float scale)
+    public int getScaledStringWidth(String displayName, float scale)
     {
         return (int) ((float) fontRendererObj.getStringWidth(displayName) * (float) scale);
     }
@@ -260,6 +246,11 @@ public class GuiModCrafterProject extends GuiScreen
 
     protected void mouseClickMove(int mouseX, int mouseY, int lastButtonClicked, long timeSinceMouseClick)
     {
+    	for (Element element : elements)
+        {
+    		element.mouseClickMove(mouseX, mouseY, lastButtonClicked, timeSinceMouseClick);
+        }
+    	
         if (holdingScript != null)
         {
             dragScripts(mouseX, mouseY);
@@ -318,6 +309,11 @@ public class GuiModCrafterProject extends GuiScreen
     protected void mouseClicked(int mouseX, int mouseY, int button)
     {
         super.mouseClicked(mouseX, mouseY, button);
+        
+        for (Element element : elements)
+        {
+        	element.mouseClicked(mouseX, mouseY, button);
+        }
 
         if (holdingScript == null)
         {
@@ -381,56 +377,30 @@ public class GuiModCrafterProject extends GuiScreen
                 }
             }
         }
-
-        int x = 0;
-        int y = 0;
-
-        int spriteWidth = 21;
-
-        for (Sprite sprite : loadedMod.getSprites())
-        {
-            int drawY = height - (spriteWidth * 3) + y;
-
-            if (mouseX < x + spriteWidth - 1 && mouseX > x)
-            {
-                if (mouseY > drawY && mouseY < drawY + spriteWidth)
-                {
-                    selectedSprite = sprite;
-
-                    break;
-                }
-            }
-
-            x += spriteWidth;
-
-            if (x > spriteWidth * 3)
-            {
-                x = 0;
-                y += spriteWidth;
-            }
-        }
     }
 
     private void drawRect(int x, int y, int sizeX, int sizeY, float r, float g, float b, float a)
     {
         GL11.glDisable(GL11.GL_TEXTURE_2D);
-
         GL11.glColor4f(r, g, b, a);
-
         drawTexturedModalRect(x, y, 0, 0, sizeX, sizeY);
-
         GL11.glEnable(GL11.GL_TEXTURE_2D);
     }
 
     protected void mouseMovedOrUp(int mouseX, int mouseY, int event)
     {
         super.mouseMovedOrUp(mouseX, mouseY, event);
+        
+        for (Element element : elements)
+        {
+        	element.mouseMovedOrUp(mouseX, mouseY, event);
+        }
 
         if (holdingScript != null)
         {
             holdingScript.setParent(snapping);
 
-            if(holdingScript.getX() < 85)
+            if(holdingScript.getX() < elementScriptSidebar.width)
             {
                 selectedSprite.removeScript(holdingScript);
             }
@@ -439,73 +409,5 @@ public class GuiModCrafterProject extends GuiScreen
         holdingScript = null;
         heldOffsetX = 0;
         heldOffsetY = 0;
-    }
-
-    private void drawScriptSidebar()
-    {
-        drawRect(85, 0, 1, height, 1.0F, 1.0F, 1.0F, 0.2F);
-        drawRect(0, height - 66, 85, 1, 1.0F, 1.0F, 1.0F, 0.2F);
-
-        drawRect(0, 9, 85, 1, 1.0F, 1.0F, 1.0F, 0.2F);
-        drawRect(86, 9, width - 86, 1, 1.0F, 1.0F, 1.0F, 0.2F);
-
-        if(selectedSprite != null)
-        {
-            drawScaledString(mc, "Script Selection", 2, 2, 0xFFFFFF, 0.75F);
-
-            int y = 12;
-
-            for (Entry<String, ScriptDef> entry : ModCrafterAPI.getScriptDefs().entrySet())
-            {
-                ScriptDef def = entry.getValue();
-
-                drawScript(def, 2, y, def.getName(), def.getDefualtDisplayName(), 1.0F);
-
-                y += scriptHeight + 2;
-            }
-        }
-    }
-
-    private void drawSprites()
-    {
-        int x = 0;
-        int y = 0;
-
-        int spriteWidth = 21;
-
-        for (Sprite sprite : loadedMod.getSprites())
-        {
-            mc.getTextureManager().bindTexture(widgets);
-
-            if (sprite == selectedSprite)
-            {
-                GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            }
-            else
-            {
-                GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
-            }
-
-            int drawY = height - (spriteWidth * 3) + y;
-
-            drawTexturedModalRect(x, drawY, 0, 0, spriteWidth - 1, spriteWidth - 1);
-
-            String name = sprite.getName();
-
-            if (name.length() > 15)
-            {
-                name = name.substring(0, 12) + "...";
-            }
-
-            drawScaledString(mc, name, x + 1, drawY + 17, 0xFFFFFF, 0.25F);
-
-            x += spriteWidth;
-
-            if (x > spriteWidth * 3)
-            {
-                x = 0;
-                y += spriteWidth;
-            }
-        }
     }
 }
