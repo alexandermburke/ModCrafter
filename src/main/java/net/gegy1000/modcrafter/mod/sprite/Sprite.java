@@ -78,8 +78,15 @@ public class Sprite
             {
                 this.hatScripts.add(script);
             }
-
-            this.scripts.put(scripts.size(), script);
+            
+            Integer id = 0;
+            
+            while(this.scripts.containsKey(id))
+            {
+                id++;
+            }
+            
+            this.scripts.put(id, script);
         }
     }
 

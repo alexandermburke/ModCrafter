@@ -107,21 +107,21 @@ public class Script
 
         this.child = getSprite().getScriptId(child);
 
+        if (oldChildId != -1)
+        {
+            Script oldChild = getSprite().getScript(oldChildId);
+
+            if (oldChild.getParent() != null && oldChild != child)
+            {
+                oldChild.setParent(null);
+            }
+        }
+        
         if (child != null)
         {
             if (getSprite().getScriptId(this) != child.parent)
             {
                 child.setParent(this);
-            }
-        }
-
-        if (oldChildId != -1)
-        {
-            Script oldChild = getSprite().getScript(oldChildId);
-
-            if (oldChild.getParent() != null)
-            {
-                oldChild.setParent(null);
             }
         }
     }
@@ -142,14 +142,6 @@ public class Script
 
         this.parent = getSprite().getScriptId(parent);
 
-        if (parent != null)
-        {
-            if (getSprite().getScriptId(this) != parent.child)
-            {
-                parent.setChild(this);
-            }
-        }
-
         if (oldParentId != -1)
         {
             Script oldParent = getSprite().getScript(oldParentId);
@@ -157,6 +149,14 @@ public class Script
             if (oldParent.getChild() != null && oldParent != parent)
             {
                 oldParent.setChild(null);
+            }
+        }
+        
+        if (parent != null)
+        {
+            if (getSprite().getScriptId(this) != parent.child)
+            {
+                parent.setChild(this);
             }
         }
     }
