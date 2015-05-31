@@ -23,6 +23,7 @@ import net.gegy1000.modcrafter.script.parameter.InputParameter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
@@ -41,6 +42,8 @@ public class GuiModCrafterProject extends GuiScreen
     private static final ResourceLocation scriptTextures = new ResourceLocation("modcrafter:textures/gui/script/scripts.png");
     private static final ResourceLocation widgets = new ResourceLocation("modcrafter:textures/gui/widgets.png");
 
+    //GuiTextField
+    
     private Mod loadedMod;
 
     private final int scriptHeight = 11;
@@ -259,40 +262,45 @@ public class GuiModCrafterProject extends GuiScreen
     {
         if (holdingScript != null)
         {
-            int x = mouseX + heldOffsetX;
-            int y = mouseY + heldOffsetY;
+            dragScripts(mouseX, mouseY);
+        }
+    }
 
-            snapping = null;
+    private void dragScripts(int mouseX, int mouseY)
+    {
+        int x = mouseX + heldOffsetX;
+        int y = mouseY + heldOffsetY;
 
-            for (Entry<Integer, Script> entry : selectedSprite.getScripts().entrySet())
+        snapping = null;
+
+        for (Entry<Integer, Script> entry : selectedSprite.getScripts().entrySet())
+        {
+            Script script = entry.getValue();
+
+            if (script != holdingScript && holdingScript.getScriptDef().canAttachTo(script) && (script.getChild() == null || script.getChild() == holdingScript))
             {
-                Script script = entry.getValue();
+                int yDiff = Math.abs(y - (script.getY() + scriptHeight));
 
-                if (script != holdingScript && holdingScript.getScriptDef().canAttachTo(script) && (script.getChild() == null || script.getChild() == holdingScript))
+                if (yDiff <= 4)
                 {
-                    int yDiff = Math.abs(y - (script.getY() + scriptHeight));
+                    int sWidth = getScriptWidth(script.getDisplayName());
 
-                    if (yDiff <= 4)
+                    if (x > script.getX() - 4 && x + sWidth < script.getX() + sWidth + 4)
                     {
-                        int sWidth = getScriptWidth(script.getDisplayName());
+                        x = script.getX();
+                        y = script.getY() + scriptHeight - 1;
 
-                        if (x > script.getX() - 4 && x + sWidth < script.getX() + sWidth + 4)
-                        {
-                            x = script.getX();
-                            y = script.getY() + scriptHeight - 1;
+                        snapping = script;
 
-                            snapping = script;
-
-                            break;
-                        }
+                        break;
                     }
                 }
             }
-
-            moveChild(holdingScript, x, y);
-
-            holdingScript.setPosition(x, y);
         }
+
+        moveChild(holdingScript, x, y);
+
+        holdingScript.setPosition(x, y);
     }
 
     private void moveChild(Script script, int x, int y)
@@ -365,6 +373,11 @@ public class GuiModCrafterProject extends GuiScreen
 
                         y += scriptHeight + 2;
                     }
+                }
+                
+                if(holdingScript != null)
+                {
+                    dragScripts(mouseX, mouseY);
                 }
             }
         }
