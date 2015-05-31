@@ -5,4 +5,6 @@ public interface IParameter
     void setData(Object data);
 
     Object getData();
+    
+    DataType getDataType();
 }
