@@ -412,8 +412,8 @@ public class GuiModCrafterProject extends GuiScreen
                 {
                     dragScripts(mouseX, mouseY);
                     Script script = holdingScript;
-                    int xPos = script.getX();
-                    int yPos = script.getY();
+                    int xPos = script.getX() + elementScriptSidebar.width;
+                    int yPos = script.getY() + elementTopBar.height;
                     int x = xPos + 2;
                     
                     int par = 0;
@@ -428,11 +428,11 @@ public class GuiModCrafterProject extends GuiScreen
                             
                             if (inputParameter.getDataType() == DataType.TEXT)
                             {
-                            	if (xPos > elementScriptSidebar.width && mouseX > x - 1 && mouseX <= x - 1 + textWidth + 1)
+                            	if (xPos > 0 && mouseX > x - 1 && mouseX <= x - 1 + textWidth + 1)
                                 {
                                 	if (mouseY > yPos && mouseY <= yPos + scriptHeight && textBox == null)
                                 	{
-                                		textBox = new TextBox(this, x + textWidth / 2 - 4, yPos - 17, textWidth * 2 + 4, 12, inputParameter);
+                                		textBox = new TextBox(this, x - 2, yPos - 17, textWidth * 2 + 4, 12, inputParameter);
                                 		textBox.text = string;
                                 	}
                                 }
