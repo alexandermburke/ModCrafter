@@ -39,7 +39,6 @@ public class ElementSprites extends Element
             dragging = true;
         }
 
-
         int x = 0;
         int y = 0;
         int spriteWidth = parent.spriteWidth;
@@ -50,7 +49,7 @@ public class ElementSprites extends Element
             scale += 0.001D;
         }
 
-        spriteWidth = (int)(scale * spriteWidth - 1);
+        spriteWidth = (int) (scale * spriteWidth - 1);
 
         for (Sprite sprite : parent.loadedMod.getSprites())
         {
@@ -99,7 +98,7 @@ public class ElementSprites extends Element
         int x = 0;
         int y = 0;
         int spriteWidth = parent.spriteWidth;
-        double scale = ((double) (width) / (double)(spriteWidth * 4 + 1));
+        double scale = ((double) (width) / (double) (spriteWidth * 4 + 1));
 
         GL11.glPushMatrix();
         GL11.glTranslated(0, (yPosition + y + 2), 0);
@@ -121,7 +120,6 @@ public class ElementSprites extends Element
 
             int drawY = yPosition + y + 2;
             parent.drawTexturedModalRect(x, drawY, 0, 0, spriteWidth - 1, spriteWidth - 1);
-
 
             String name = sprite.getName();
 

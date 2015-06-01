@@ -8,47 +8,47 @@ import org.lwjgl.opengl.GL11;
 
 public abstract class Element
 {
-	public Minecraft mc = Minecraft.getMinecraft();
-	
-	public GuiModCrafterProject parent;
-	public int xPosition;
-	public int yPosition;
-	public int width;
-	public int height;
-	
-	public Element(GuiModCrafterProject gui, int x, int y, int width, int height)
-	{
-		this.parent = gui;
-		this.xPosition = x;
-		this.yPosition = y;
-		this.width = width;
-		this.height = height;
-	}
-	
-	public void mouseMovedOrUp(int mouseX, int mouseY, int event)
+    public Minecraft mc = Minecraft.getMinecraft();
+
+    public GuiModCrafterProject parent;
+    public int xPosition;
+    public int yPosition;
+    public int width;
+    public int height;
+
+    public Element(GuiModCrafterProject gui, int x, int y, int width, int height)
     {
-		
+        this.parent = gui;
+        this.xPosition = x;
+        this.yPosition = y;
+        this.width = width;
+        this.height = height;
     }
-	
-	public void mouseClicked(int mouseX, int mouseY, int button)
+
+    public void mouseMovedOrUp(int mouseX, int mouseY, int event)
     {
-		
+
     }
-	
-	public void mouseClickMove(int mouseX, int mouseY, int lastButtonClicked, long timeSinceMouseClick)
+
+    public void mouseClicked(int mouseX, int mouseY, int button)
     {
-		
+
     }
-	
-	public void drawScreen(int mouseX, int mouseY, float partialTicks)
+
+    public void mouseClickMove(int mouseX, int mouseY, int lastButtonClicked, long timeSinceMouseClick)
     {
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		ColorHelper.setColorFromInt(parent.elementColor, 1.0F);
-		parent.drawTexturedModalRect(xPosition, yPosition, 0, 0, width, height);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+
     }
-	
-	public void drawRect(int x, int y, int sizeX, int sizeY, float r, float g, float b, float a)
+
+    public void drawScreen(int mouseX, int mouseY, float partialTicks)
+    {
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        ColorHelper.setColorFromInt(parent.elementColor, 1.0F);
+        parent.drawTexturedModalRect(xPosition, yPosition, 0, 0, width, height);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+    }
+
+    public void drawRect(int x, int y, int sizeX, int sizeY, float r, float g, float b, float a)
     {
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glColor4f(r, g, b, a);
@@ -56,8 +56,8 @@ public abstract class Element
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glColor4f(1, 1, 1, 1);
     }
-	
-	public void drawScaledString(Minecraft mc, String text, float x, float y, int color, float scale)
+
+    public void drawScaledString(Minecraft mc, String text, float x, float y, int color, float scale)
     {
         GL11.glPushMatrix();
         GL11.glScalef(scale, scale, scale);

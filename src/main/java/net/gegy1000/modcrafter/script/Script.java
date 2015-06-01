@@ -61,7 +61,7 @@ public class Script
 
             for (int i = 0; i < name.length; i++)
             {
-                if(name[i] instanceof IParameter)
+                if (name[i] instanceof IParameter)
                 {
                     name[i] = new InputParameter(jsonScript.parameters.get(parameterId)); // TODO save type of par? or override with hat script?
 
@@ -153,20 +153,20 @@ public class Script
     public IParameter getParameter(int index)
     {
         int parIndex = 0;
-        
+
         for (Object namePart : name)
         {
-            if(namePart instanceof IParameter)
+            if (namePart instanceof IParameter)
             {
-                if(parIndex == index)
+                if (parIndex == index)
                 {
                     return (IParameter) namePart;
                 }
-                
+
                 parIndex++;
             }
         }
-        
+
         return null;
     }
 

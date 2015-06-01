@@ -10,7 +10,7 @@ public abstract class ScriptDefHat extends ScriptDef
     public void execute(Script script)
     {
     }
-    
+
     @Override
     public boolean canAttachTo(Script script)
     {

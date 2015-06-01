@@ -43,7 +43,7 @@ public class Sprite
         for (Entry<Integer, JsonScript> entry : jsonSprite.scripts.entrySet())
         {
             JsonScript script = entry.getValue();
-            
+
             Script newScript = script.toScript(this);
 
             scripts.put(entry.getKey(), newScript);
@@ -78,24 +78,24 @@ public class Sprite
             {
                 this.hatScripts.add(script);
             }
-            
+
             Integer id = 0;
-            
-            while(this.scripts.containsKey(id))
+
+            while (this.scripts.containsKey(id))
             {
                 id++;
             }
-            
+
             this.scripts.put(id, script);
         }
     }
 
     public void removeScript(Script script)
     {
-        if(script != null)
+        if (script != null)
         {
             scripts.remove(getScriptId(script));
-            
+
             removeScript(script.getChild());
         }
     }
@@ -109,12 +109,12 @@ public class Sprite
     {
         for (Entry<Integer, Script> entry : scripts.entrySet())
         {
-            if(entry.getValue().equals(script))
+            if (entry.getValue().equals(script))
             {
                 return entry.getKey();
             }
         }
-        
+
         return -1;
     }
 

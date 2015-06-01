@@ -75,7 +75,7 @@ public class GuiModCrafter extends GuiScreen
         this.modsGui.registerScrollButtons(4, 5);
 
         this.mods = ModSaveManager.discoverMods();
-        
+
         this.selectedMod = -1;
     }
 
