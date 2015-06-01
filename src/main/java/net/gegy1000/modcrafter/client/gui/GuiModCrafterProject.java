@@ -152,12 +152,12 @@ public class GuiModCrafterProject extends GuiScreen
 
         float alpha = 1.0F;
 
-        if((script.equals(holdingScript) && snapping != null) || x < elementScriptSidebar.width)
+        if((script.equals(holdingScript) && snapping != null) || x < 0)
         {
             alpha = 0.8F;
         }
 
-        drawScript(script.getScriptDef(), x, script.getY(), script.getName(), script.getParameters(), script.getDisplayName(), alpha);
+        drawScript(script.getScriptDef(), x + elementScriptSidebar.width, script.getY() + elementTopBar.height, script.getName(), script.getParameters(), script.getDisplayName(), alpha);
     }
 
     public void drawScript(ScriptDef def, int xPosition, int yPosition, Object[] name, List<IParameter> parameters, String displayName, float alpha)
@@ -304,7 +304,7 @@ public class GuiModCrafterProject extends GuiScreen
                 if (yDiff <= 4)
                 {
                     int sWidth = getScriptWidth(script.getDisplayName());
-
+                    
                     if (x > script.getX() - 4 && x + sWidth < script.getX() + sWidth + 4)
                     {
                         x = script.getX();
@@ -318,6 +318,9 @@ public class GuiModCrafterProject extends GuiScreen
             }
         }
 
+        if(y < 0)
+            y = 0;
+        
         moveChild(holdingScript, x, y);
 
         holdingScript.setPosition(x, y);
@@ -359,15 +362,15 @@ public class GuiModCrafterProject extends GuiScreen
 
                     int width = getScriptWidth(script.getDisplayName());
 
-                    int x = script.getX();
-                    int y = script.getY();
+                    int x = script.getX() + elementScriptSidebar.width;
+                    int y = script.getY() + elementTopBar.height;
 
                     if (mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + scriptHeight)
                     {
                         holdingScript = script;
 
-                        heldOffsetX = x - mouseX;
-                        heldOffsetY = y - mouseY;
+                        heldOffsetX = x - elementScriptSidebar.width - mouseX;
+                        heldOffsetY = y - elementTopBar.height - mouseY;
 
                         snapping = null;
 
@@ -480,7 +483,7 @@ public class GuiModCrafterProject extends GuiScreen
         {
             holdingScript.setParent(snapping);
 
-            if(holdingScript.getX() < elementScriptSidebar.width)
+            if(holdingScript.getX() < 0)
             {
                 selectedSprite.removeScript(holdingScript);
             }
