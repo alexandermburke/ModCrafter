@@ -60,10 +60,10 @@ public class ElementSidebar extends Element
 	
 	public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-		super.drawScreen(mouseX, mouseY, partialTicks);
-		
-		drawRect(width - 1, yPosition, 1, height, 1.0F, 1.0F, 1.0F, 0.2F);
-        drawRect(0, 9, width - 1, 1, 1.0F, 1.0F, 1.0F, 0.2F);
+	    super.drawScreen(mouseX, mouseY, partialTicks);
+	    
+		drawRect(width + 1, yPosition, 1, height, 1.0F, 1.0F, 1.0F, 0.2F);
+        drawRect(0, 9, width + 1, 1, 1.0F, 1.0F, 1.0F, 0.2F);
 
         if (parent.selectedSprite != null)
         {
@@ -88,9 +88,6 @@ public class ElementSidebar extends Element
         		}
         	}
         	
-        	
-        	
-            
             int y = 12;
             int scriptHeight = parent.scriptHeight;
             double scale = 0.0D;
@@ -109,7 +106,7 @@ public class ElementSidebar extends Element
             {
                 ScriptDef def = entry.getValue();
                 
-                parent.drawScript(def, 2, y, def.getName(), null ,def.getDefualtDisplayName(), 1.0F);
+                parent.drawScript(def, 2, y, def.getName(), null, def.getDefualtDisplayName(), 1.0F);
                 
                 y += scriptHeight + 2;
             }

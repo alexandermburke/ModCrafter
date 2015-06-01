@@ -35,12 +35,10 @@ public class GuiModCrafterProject extends GuiScreen
 {
 	public GuiModCrafter modCrafterGui;
 	public ArrayList<Element> elements = Lists.newArrayList();
-	public int backgroundColor = 0x969696;
+	public int backgroundColor = 0x141414;
 
-    public static final ResourceLocation background = new ResourceLocation("modcrafter:textures/gui/background.png");
     public static final ResourceLocation scriptTextures = new ResourceLocation("modcrafter:textures/gui/script/scripts.png");
     public static final ResourceLocation widgets = new ResourceLocation("modcrafter:textures/gui/widgets.png");
-    
     
     public Mod loadedMod;
 
@@ -140,9 +138,9 @@ public class GuiModCrafterProject extends GuiScreen
         }
         
         if (textBox != null)
-    	{
-        	textBox.drawScreen(mouseX, mouseY, partialTicks);
-    	}
+        {
+            textBox.drawScreen(mouseX, mouseY, partialTicks);
+        }
         
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
@@ -252,7 +250,7 @@ public class GuiModCrafterProject extends GuiScreen
 
     private int getScriptDrawWidth(String displayName)
     {
-        return (int) ((float) fontRendererObj.getStringWidth(displayName) * 0.5F) - 5;
+        return (int) ((float) fontRendererObj.getStringWidth(displayName) * 0.5F) - 6;
     }
 
     private int getScriptWidth(String displayName)

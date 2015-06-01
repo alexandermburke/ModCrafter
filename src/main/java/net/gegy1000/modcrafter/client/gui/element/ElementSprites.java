@@ -93,8 +93,7 @@ public class ElementSprites extends Element
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		
-		drawRect(0, yPosition, width, 1, 1.0F, 1.0F, 1.0F, 0.2F);
-		drawRect(width - 1, yPosition + 1, 1, height, 1.0F, 1.0F, 1.0F, 0.2F);
+		drawRect(0, yPosition, width + 1, 1, 1.0F, 1.0F, 1.0F, 0.2F);
 		
 		int x = 0;
         int y = 0;
@@ -126,7 +125,6 @@ public class ElementSprites extends Element
 			
 			int drawY = yPosition + y + 2;
 			parent.drawTexturedModalRect(x, drawY, 0, 0, spriteWidth - 1, spriteWidth - 1);
-			
 			
 			String name = sprite.getName();
 

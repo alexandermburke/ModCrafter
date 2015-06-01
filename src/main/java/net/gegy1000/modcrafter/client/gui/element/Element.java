@@ -42,8 +42,6 @@ public abstract class Element
 	
 	public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-		mc.getTextureManager().bindTexture(parent.background);
-		parent.drawTexturedModalRect(xPosition, yPosition, 0, 0, width, height);
     }
 	
 	public void drawRect(int x, int y, int sizeX, int sizeY, float r, float g, float b, float a)

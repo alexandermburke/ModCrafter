@@ -4,6 +4,10 @@ import org.lwjgl.opengl.GL11;
 
 public class ColorHelper
 {
+    /**
+     * @deprecated Use LLib ColorHelper
+     */
+    @Deprecated
 	public static void setColorFromInt(int color, float alpha)
     {
         float r = (float) (color >> 16 & 255) / 255.0F;
