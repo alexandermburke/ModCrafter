@@ -34,7 +34,7 @@ public class ElementSprites extends Element
 		
 		int i = 3;
 		
-		if (!dragging && mouseY > yPosition - i && mouseY <= yPosition + i)
+		if (!dragging && mouseY > yPosition - i && mouseY <= yPosition + i && mouseX <= width + i)
 		{
 			dragging = true;
 		}

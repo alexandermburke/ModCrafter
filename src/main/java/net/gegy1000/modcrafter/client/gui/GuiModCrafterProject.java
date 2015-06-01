@@ -33,8 +33,8 @@ import com.google.common.collect.Lists;
 public class GuiModCrafterProject extends GuiScreen
 {
 	public GuiModCrafter modCrafterGui;
-	public int backgroundColor = 0x969696;
 	public ArrayList<Element> elements = Lists.newArrayList();
+	public int backgroundColor = 0x969696;
 
     public static final ResourceLocation background = new ResourceLocation("modcrafter:textures/gui/background.png");
     public static final ResourceLocation scriptTextures = new ResourceLocation("modcrafter:textures/gui/script/scripts.png");
@@ -51,12 +51,14 @@ public class GuiModCrafterProject extends GuiScreen
     public int heldOffsetX, heldOffsetY;
 
     public Script snapping;
-
+    
     public Sprite selectedSprite;
     
     public ElementSidebar elementScriptSidebar;
     public ElementSprites elementSprites;
     public ElementTopBar elementTopBar;
+    
+    public TextBox textBox;
 
     public GuiModCrafterProject(GuiModCrafter modCrafterGui, Mod loadedMod)
     {
@@ -99,6 +101,16 @@ public class GuiModCrafterProject extends GuiScreen
             this.mc.displayGuiScreen(modCrafterGui);
         }
     }
+    
+    public void updateScreen()
+    {
+    	super.updateScreen();
+    	
+    	if (textBox != null)
+    	{
+    		textBox.updateScreen();
+    	}
+    }
 
     /**
      * Draws the screen and all the components in it.
@@ -126,7 +138,12 @@ public class GuiModCrafterProject extends GuiScreen
                 drawScript(script.getValue());
             }
         }
-
+        
+        if (textBox != null)
+    	{
+        	textBox.drawScreen(mouseX, mouseY, partialTicks);
+    	}
+        
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
@@ -251,7 +268,7 @@ public class GuiModCrafterProject extends GuiScreen
     		element.mouseClickMove(mouseX, mouseY, lastButtonClicked, timeSinceMouseClick);
         }
     	
-        if (holdingScript != null)
+        if (holdingScript != null && textBox == null)
         {
             dragScripts(mouseX, mouseY);
         }
@@ -314,6 +331,11 @@ public class GuiModCrafterProject extends GuiScreen
         {
         	element.mouseClicked(mouseX, mouseY, button);
         }
+        
+        if (textBox != null)
+    	{
+        	textBox.mouseClicked(mouseX, mouseY, button);
+    	}
 
         if (holdingScript == null)
         {
@@ -371,12 +393,54 @@ public class GuiModCrafterProject extends GuiScreen
                     }
                 }
                 
-                if(holdingScript != null)
+                if (holdingScript != null)
                 {
                     dragScripts(mouseX, mouseY);
+                    Script script = holdingScript;
+                    int xPos = script.getX();
+                    int yPos = script.getY();
+                    int x = xPos + 2;
+                    
+                    for (Object object : script.getName())
+                    {
+						if (object instanceof InputParameter)
+                        {
+                            InputParameter inputParameter = (InputParameter) object;
+                            String string = inputParameter.getData().toString();
+                            int textWidth = getScaledStringWidth(string + " ", 0.5F);
+                            
+                            if (inputParameter.getDataType() == DataType.TEXT)
+                            {
+                            	if (xPos > elementScriptSidebar.width && mouseX > x - 1 && mouseX <= x - 1 + textWidth + 1)
+                                {
+                                	if (mouseY > yPos && mouseY <= yPos + scriptHeight && textBox == null)
+                                	{
+                                		textBox = new TextBox(this, x + textWidth / 2 - 4, yPos - 17, textWidth * 2 + 4, 12, inputParameter);
+                                		textBox.text = string;
+                                	}
+                                }
+                            }
+                            
+                            x += textWidth;
+                        }
+                        else
+                        {
+                            x += getScaledStringWidth(object.toString() + " ", 0.5F);
+                        }
+                    }
                 }
             }
         }
+    }
+    
+    protected void keyTyped(char c, int key)
+    {
+    	super.keyTyped(c, key);
+    	
+    	if (textBox != null)
+    	{
+    		textBox.keyTyped(c, key);
+    	}
     }
 
     private void drawRect(int x, int y, int sizeX, int sizeY, float r, float g, float b, float a)

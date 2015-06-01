@@ -52,6 +52,7 @@ public abstract class Element
         GL11.glColor4f(r, g, b, a);
         parent.drawTexturedModalRect(x, y, 0, 0, sizeX, sizeY);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glColor4f(1, 1, 1, 1);
     }
 	
 	public void drawScaledString(Minecraft mc, String text, float x, float y, int color, float scale)
