@@ -137,7 +137,7 @@ public class GuiModCrafterProject extends GuiScreen
                 drawScript(script.getValue());
             }
         }
-
+        
         if (textBox != null)
         {
             textBox.drawScreen(mouseX, mouseY, partialTicks);
@@ -387,8 +387,6 @@ public class GuiModCrafterProject extends GuiScreen
                             heldOffsetY = y - mouseY - elementTopBar.height;
 
                             holdingScript.setPosition(mouseX + heldOffsetX, mouseY + heldOffsetY);
-
-                            selectedSprite.addScript(holdingScript); // TODO add script inside constructor
 
                             snapping = null;
 

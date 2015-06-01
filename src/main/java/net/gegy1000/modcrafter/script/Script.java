@@ -33,6 +33,8 @@ public class Script
         this.parent = sprite.getScriptId(parent);
         this.mod = sprite.getMod();
         this.name = def.getName();
+        
+        this.sprite.addScript(this);
     }
 
     public void execute()

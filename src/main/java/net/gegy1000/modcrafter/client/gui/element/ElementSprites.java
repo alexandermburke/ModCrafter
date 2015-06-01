@@ -118,7 +118,7 @@ public class ElementSprites extends Element
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
             }
 
-            int drawY = yPosition + y + 2;
+            int drawY = yPosition + y + 10;
             parent.drawTexturedModalRect(x, drawY, 0, 0, spriteWidth - 1, spriteWidth - 1);
 
             String name = sprite.getName();
