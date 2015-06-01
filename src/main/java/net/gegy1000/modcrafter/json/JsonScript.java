@@ -32,9 +32,14 @@ public class JsonScript
         this.x = script.getX();
         this.y = script.getY();
 
-        for (IParameter par : script.getParameters())
+        int parIndex = 0;
+        
+        for (Object part : script.getName())
         {
-            this.parameters.add(par.getData());
+            if(part instanceof IParameter)
+            {
+                this.parameters.add(((IParameter) part).getData());
+            }
         }
     }
 

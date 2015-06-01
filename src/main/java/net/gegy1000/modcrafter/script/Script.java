@@ -19,7 +19,6 @@ public class Script
 
     private Object[] name;
 
-    private List<IParameter> parameters;
     private Sprite sprite;
 
     private int x;
@@ -33,8 +32,7 @@ public class Script
         this.def = def;
         this.parent = sprite.getScriptId(parent);
         this.mod = sprite.getMod();
-
-        loadParameters(def);
+        this.name = def.getName();
     }
 
     public void execute()
@@ -49,21 +47,6 @@ public class Script
         }
     }
 
-    private void loadParameters(ScriptDef def)
-    {
-        this.name = def.getName();
-
-        parameters = new ArrayList<IParameter>();
-
-        for (Object arg : name)
-        {
-            if (arg instanceof IParameter)
-            {
-                parameters.add((IParameter) arg);
-            }
-        }
-    }
-
     public Script(Sprite sprite, Mod mod, JsonScript jsonScript)
     {
         this.def = ModCrafterAPI.getScriptById(jsonScript.defId);
@@ -71,13 +54,19 @@ public class Script
         this.child = jsonScript.childId;
         this.sprite = sprite;
         this.name = def.getName();
-        this.parameters = new ArrayList<IParameter>();
 
         if (jsonScript.parameters != null)
         {
-            for (Object par : jsonScript.parameters)
+            int parameterId = 0;
+
+            for (int i = 0; i < name.length; i++)
             {
-                parameters.add(new InputParameter(par)); // TODO save type of par? or override with hat script?
+                if(name[i] instanceof IParameter)
+                {
+                    name[i] = new InputParameter(jsonScript.parameters.get(parameterId)); // TODO save type of par? or override with hat script?
+
+                    parameterId++;
+                }
             }
         }
 
@@ -116,7 +105,7 @@ public class Script
                 oldChild.setParent(null);
             }
         }
-        
+
         if (child != null)
         {
             if (getSprite().getScriptId(this) != child.parent)
@@ -151,7 +140,7 @@ public class Script
                 oldParent.setChild(null);
             }
         }
-        
+
         if (parent != null)
         {
             if (getSprite().getScriptId(this) != parent.child)
@@ -163,29 +152,34 @@ public class Script
 
     public IParameter getParameter(int index)
     {
-        return parameters.get(index);
+        int parIndex = 0;
+        
+        for (Object namePart : name)
+        {
+            if(namePart instanceof IParameter)
+            {
+                if(parIndex == index)
+                {
+                    return (IParameter) namePart;
+                }
+                
+                parIndex++;
+            }
+        }
+        
+        return null;
     }
 
     public String getDisplayName()
     {
-        // TODO cache display name? remove this?
-
         String displayName = "";
 
-        int parameter = 0;
-        
         for (Object namePart : name)
         {
             if (namePart instanceof IParameter)
-            {
-                displayName += getParameter(parameter).getData();
-                
-                parameter++;
-            }
+                displayName += ((IParameter) namePart).getData();
             else
-            {
                 displayName += namePart;
-            }
 
             displayName += " ";
         }
@@ -201,11 +195,6 @@ public class Script
     public Sprite getSprite()
     {
         return sprite;
-    }
-
-    public List<IParameter> getParameters()
-    {
-        return parameters;
     }
 
     public Object[] getName()

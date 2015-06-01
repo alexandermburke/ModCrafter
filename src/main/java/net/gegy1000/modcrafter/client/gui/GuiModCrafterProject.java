@@ -157,10 +157,10 @@ public class GuiModCrafterProject extends GuiScreen
             alpha = 0.8F;
         }
 
-        drawScript(script.getScriptDef(), x + elementScriptSidebar.width, script.getY() + elementTopBar.height, script.getName(), script.getParameters(), script.getDisplayName(), alpha);
+        drawScript(script.getScriptDef(), x + elementScriptSidebar.width, script.getY() + elementTopBar.height, script.getName(), script.getDisplayName(), alpha);
     }
 
-    public void drawScript(ScriptDef def, int xPosition, int yPosition, Object[] name, List<IParameter> parameters, String displayName, float alpha)
+    public void drawScript(ScriptDef def, int xPosition, int yPosition, Object[] name, String displayName, float alpha)
     {
         int width = getScriptDrawWidth(displayName);
 
@@ -214,17 +214,8 @@ public class GuiModCrafterProject extends GuiScreen
         {
             if(object instanceof InputParameter)
             {
-                InputParameter inputParameter;
+                InputParameter inputParameter = (InputParameter) object;
                 
-                if(parameters == null)
-                {
-                    inputParameter = (InputParameter) object;
-                }
-                else
-                {
-                    inputParameter = (InputParameter) parameters.get(parameter);
-                }
-
                 String string = inputParameter.getData().toString();
 
                 int textWidth = getScaledStringWidth(string + " ", 0.5F);
