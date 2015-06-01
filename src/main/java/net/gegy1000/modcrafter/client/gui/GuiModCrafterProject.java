@@ -35,7 +35,8 @@ public class GuiModCrafterProject extends GuiScreen
 {
 	public GuiModCrafter modCrafterGui;
 	public ArrayList<Element> elements = Lists.newArrayList();
-	public int backgroundColor = 0x141414;
+	public int backgroundColor = 0x212121;
+	public int elementColor = 0x141414;
 
     public static final ResourceLocation scriptTextures = new ResourceLocation("modcrafter:textures/gui/script/scripts.png");
     public static final ResourceLocation widgets = new ResourceLocation("modcrafter:textures/gui/widgets.png");

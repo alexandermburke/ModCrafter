@@ -1,8 +1,8 @@
 package net.gegy1000.modcrafter.client.gui.element;
 
 import net.gegy1000.modcrafter.client.gui.GuiModCrafterProject;
+import net.gegy1000.modcrafter.color.ColorHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 
 import org.lwjgl.opengl.GL11;
 
@@ -42,6 +42,10 @@ public abstract class Element
 	
 	public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		ColorHelper.setColorFromInt(parent.elementColor, 1.0F);
+		parent.drawTexturedModalRect(xPosition, yPosition, 0, 0, width, height);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
     }
 	
 	public void drawRect(int x, int y, int sizeX, int sizeY, float r, float g, float b, float a)

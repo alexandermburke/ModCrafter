@@ -23,6 +23,6 @@ public class ElementTopBar extends Element
         
         drawScaledString(mc, title, parent.elementScriptSidebar.width + 3, 2, 0xFFFFFF, 0.75F);
         
-		drawRect(xPosition + 2, height - 1, width, 1, 1.0F, 1.0F, 1.0F, 0.2F);
+		drawRect(xPosition, height - 1, width, 1, 1.0F, 1.0F, 1.0F, 0.2F);
     }
 }
