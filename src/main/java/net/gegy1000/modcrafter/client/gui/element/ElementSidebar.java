@@ -109,7 +109,7 @@ public class ElementSidebar extends Element
             {
                 ScriptDef def = entry.getValue();
                 
-                parent.drawScript(def, 2, y, def.getName(), def.getDefualtDisplayName(), 1.0F);
+                parent.drawScript(def, 2, y, def.getName(), null ,def.getDefualtDisplayName(), 1.0F);
                 
                 y += scriptHeight + 2;
             }

@@ -2,6 +2,7 @@ package net.gegy1000.modcrafter.client.gui;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
 
 import net.gegy1000.modcrafter.ModCrafterAPI;
@@ -17,12 +18,12 @@ import net.gegy1000.modcrafter.script.Script;
 import net.gegy1000.modcrafter.script.ScriptDef;
 import net.gegy1000.modcrafter.script.ScriptDefHat;
 import net.gegy1000.modcrafter.script.parameter.DataType;
+import net.gegy1000.modcrafter.script.parameter.IParameter;
 import net.gegy1000.modcrafter.script.parameter.InputParameter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
@@ -76,7 +77,6 @@ public class GuiModCrafterProject extends GuiScreen
         heldOffsetY = 0;
 
         this.buttonList.add(new GuiModCrafterButton(0, this.width - 80, this.height - 10 - 20, 72, 20, I18n.format("gui.done", new Object[0])));
-        
         
         this.elements.clear();
         this.elements.add(this.elementScriptSidebar = new ElementSidebar(this, 0, 0, elementScriptSidebar == null ? 85 : elementScriptSidebar.width, height));
@@ -158,10 +158,10 @@ public class GuiModCrafterProject extends GuiScreen
             alpha = 0.8F;
         }
 
-        drawScript(script.getScriptDef(), x, script.getY(), script.getName(), script.getDisplayName(), alpha);
+        drawScript(script.getScriptDef(), x, script.getY(), script.getName(), script.getParameters(), script.getDisplayName(), alpha);
     }
 
-    public void drawScript(ScriptDef def, int xPosition, int yPosition, Object[] name, String displayName, float alpha)
+    public void drawScript(ScriptDef def, int xPosition, int yPosition, Object[] name, List<IParameter> parameters, String displayName, float alpha)
     {
         int width = getScriptDrawWidth(displayName);
 
@@ -209,11 +209,22 @@ public class GuiModCrafterProject extends GuiScreen
 
         int x = xPosition + 2;
 
+        int parameter = 0;
+        
         for (Object object : name)
         {
             if(object instanceof InputParameter)
             {
-                InputParameter inputParameter = (InputParameter) object;
+                InputParameter inputParameter;
+                
+                if(parameters == null)
+                {
+                    inputParameter = (InputParameter) object;
+                }
+                else
+                {
+                    inputParameter = (InputParameter) parameters.get(parameter);
+                }
 
                 String string = inputParameter.getData().toString();
 
@@ -227,6 +238,8 @@ public class GuiModCrafterProject extends GuiScreen
                 drawScaledString(mc, string, x, yPosition + 3, 0xD8D8D8, 0.5F);
 
                 x += textWidth;
+                
+                parameter++;
             }
             else
             {
@@ -401,11 +414,13 @@ public class GuiModCrafterProject extends GuiScreen
                     int yPos = script.getY();
                     int x = xPos + 2;
                     
+                    int par = 0;
+                    
                     for (Object object : script.getName())
                     {
 						if (object instanceof InputParameter)
                         {
-                            InputParameter inputParameter = (InputParameter) object;
+                            InputParameter inputParameter = (InputParameter) script.getParameter(par);
                             String string = inputParameter.getData().toString();
                             int textWidth = getScaledStringWidth(string + " ", 0.5F);
                             
@@ -420,6 +435,8 @@ public class GuiModCrafterProject extends GuiScreen
                                 	}
                                 }
                             }
+                            
+                            par++;
                             
                             x += textWidth;
                         }
