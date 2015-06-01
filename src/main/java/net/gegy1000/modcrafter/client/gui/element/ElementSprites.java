@@ -99,7 +99,7 @@ public class ElementSprites extends Element
         int x = 0;
         int y = 0;
         int spriteWidth = parent.spriteWidth;
-        double scale = ((double) width / (double)(spriteWidth * 4 + 1));
+        double scale = ((double) (width) / (double)(spriteWidth * 4 + 1));
 
         GL11.glPushMatrix();
         GL11.glTranslated(0, (yPosition + y + 2), 0);

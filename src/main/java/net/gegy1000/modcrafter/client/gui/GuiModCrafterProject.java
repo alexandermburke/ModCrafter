@@ -392,8 +392,8 @@ public class GuiModCrafterProject extends GuiScreen
                         {
                             holdingScript = new Script(selectedSprite, def, null);
 
-                            heldOffsetX = 2 - mouseX;
-                            heldOffsetY = y - mouseY;
+                            heldOffsetX = 2 - mouseX - elementScriptSidebar.width;
+                            heldOffsetY = y - mouseY - elementTopBar.height;
 
                             holdingScript.setPosition(mouseX + heldOffsetX, mouseY + heldOffsetY);
 
@@ -428,7 +428,7 @@ public class GuiModCrafterProject extends GuiScreen
                             
                             if (inputParameter.getDataType() == DataType.TEXT)
                             {
-                            	if (xPos > 0 && mouseX > x - 1 && mouseX <= x - 1 + textWidth + 1)
+                            	if (xPos >= elementScriptSidebar.width && mouseX > x - 1 && mouseX <= x - 1 + textWidth + 1)
                                 {
                                 	if (mouseY > yPos && mouseY <= yPos + scriptHeight && textBox == null)
                                 	{
