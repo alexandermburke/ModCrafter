@@ -232,10 +232,10 @@ public class GuiModCrafterProject extends GuiScreen
 
                 if(inputParameter.getDataType() == DataType.TEXT)
                 {
-                    drawRect(x - 1, yPosition + 2, textWidth + 1, 6, 1F, 1F, 1F, 0.9F * alpha);
+                    drawRect(x - 1, yPosition + 2, textWidth + 1, 6, 1F, 1F, 1F, 0.7F * alpha);
                 }
 
-                drawScaledString(mc, string, x, yPosition + 3, 0xD8D8D8, 0.5F);
+                drawScaledString(mc, string, x, yPosition + 3, 0xCCCCCC, 0.5F);
 
                 x += textWidth;
                 
