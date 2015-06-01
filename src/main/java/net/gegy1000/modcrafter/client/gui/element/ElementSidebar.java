@@ -88,18 +88,10 @@ public class ElementSidebar extends Element
 				}
 			}
 
-
-
-
 			int y = 12;
 			int scriptHeight = parent.scriptHeight;
-			double scale = 0.0D;
-
-			while ((scriptHeight * 4 - 1) * scale < width)
-			{
-				scale += 0.001D;
-			}
-
+			double scale = (double) width / (double) (scriptHeight * 4 - 1);
+			
 			GL11.glPushMatrix();
 //			GL11.glTranslated(0, (yPosition + y + 2), 0);
 //			GL11.glScaled(scale, scale, scale);
