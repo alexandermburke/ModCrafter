@@ -53,7 +53,7 @@ public class ElementSprites extends Element
 
         for (Sprite sprite : parent.loadedMod.getSprites())
         {
-            int drawY = yPosition + 2 + y;
+            int drawY = yPosition + 10 + y;
 
             if (mouseX < x + spriteWidth - scale && mouseX > x)
             {

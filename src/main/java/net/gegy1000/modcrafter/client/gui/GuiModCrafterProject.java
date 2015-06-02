@@ -137,7 +137,7 @@ public class GuiModCrafterProject extends GuiScreen
                 drawScript(script.getValue());
             }
         }
-        
+
         if (textBox != null)
         {
             textBox.drawScreen(mouseX, mouseY, partialTicks);
@@ -157,10 +157,10 @@ public class GuiModCrafterProject extends GuiScreen
             alpha = 0.8F;
         }
 
-        drawScript(script.getScriptDef(), x + elementScriptSidebar.width, script.getY() + elementTopBar.height, script.getName(), script.getDisplayName(), alpha);
+        drawScript(script.getScriptDef(), x + elementScriptSidebar.width, script.getY() + elementTopBar.height, script.getName(), script.getDisplayName(), alpha, width);
     }
 
-    public void drawScript(ScriptDef def, int xPosition, int yPosition, Object[] name, String displayName, float alpha)
+    public void drawScript(ScriptDef def, int xPosition, int yPosition, Object[] name, String displayName, float alpha, int maxWidth)
     {
         int width = getScriptDrawWidth(displayName);
 
@@ -176,34 +176,34 @@ public class GuiModCrafterProject extends GuiScreen
 
         if (def instanceof ScriptDefHat)
         {
-            drawTexturedModalRect(xPosition, yPosition, 12, 0, 7, 12);
+            drawLimitedTexturedModalRect(xPosition, yPosition, 12, 0, 7, 12, maxWidth);
 
             for (int i = 0; i < 5; i++)
             {
-                drawTexturedModalRect(xPosition + 7 + i, yPosition, 19, 0, 1, 12);
+                drawLimitedTexturedModalRect(xPosition + 7 + i, yPosition, 19, 0, 1, 12, maxWidth);
             }
 
-            drawTexturedModalRect(xPosition + 12, yPosition, 20, 0, 1, 12);
+            drawLimitedTexturedModalRect(xPosition + 12, yPosition, 20, 0, 1, 12, maxWidth);
 
             for (int i = 5; i < width; i++)
             {
-                drawTexturedModalRect(xPosition + 8 + (i), yPosition, 21, 0, 1, 12);
+                drawLimitedTexturedModalRect(xPosition + 8 + (i), yPosition, 21, 0, 1, 12, maxWidth);
             }
 
-            drawTexturedModalRect(xPosition + 8 + width, yPosition, 22, 0, 1, 12);
+            drawLimitedTexturedModalRect(xPosition + 8 + width, yPosition, 22, 0, 1, 12, maxWidth);
 
             yPosition++;
         }
         else
         {
-            drawTexturedModalRect(xPosition, yPosition, 0, 0, 7, 12);
+            drawLimitedTexturedModalRect(xPosition, yPosition, 0, 0, 7, 12, maxWidth);
 
             for (int i = 0; i < width; i++)
             {
-                drawTexturedModalRect(xPosition + 7 + (i), yPosition, 7, 0, 1, 12);
+                drawLimitedTexturedModalRect(xPosition + 7 + (i), yPosition, 7, 0, 1, 12, maxWidth);
             }
 
-            drawTexturedModalRect(xPosition + 7 + width, yPosition, 9, 0, 1, 12);
+            drawLimitedTexturedModalRect(xPosition + 7 + width, yPosition, 9, 0, 1, 12, maxWidth);
         }
 
         int x = xPosition + 2;
@@ -222,10 +222,13 @@ public class GuiModCrafterProject extends GuiScreen
 
                 if (inputParameter.getDataType() == DataType.TEXT)
                 {
-                    drawRect(x - 1, yPosition + 2, textWidth + 1, 6, 1F, 1F, 1F, 0.7F * alpha);
+                    drawLimitedRect(x - 1, yPosition + 2, textWidth + 1, 6, 1F, 1F, 1F, 0.7F * alpha, maxWidth);
                 }
 
-                drawScaledString(mc, string, x, yPosition + 3, 0xCCCCCC, 0.5F);
+                if(!drawScaledLimitedString(mc, string, x, yPosition + 3, 0xCCCCCC, 0.5F, maxWidth))
+                {
+                    break;
+                }
 
                 x += textWidth;
 
@@ -233,11 +236,94 @@ public class GuiModCrafterProject extends GuiScreen
             }
             else
             {
-                drawScaledString(mc, object.toString(), x, yPosition + 3, 0xFFFFFF, 0.5F);
-
-                x += getScaledStringWidth(object.toString() + " ", 0.5F);
+                if (drawScaledLimitedString(mc, object.toString(), x, yPosition + 3, 0xFFFFFF, 0.5F, maxWidth))
+                    x += getScaledStringWidth(object.toString() + " ", 0.5F);
+                else
+                    break;
             }
         }
+    }
+
+    private void drawLimitedTexturedModalRect(int x, int y, int u, int v, int width, int height, int maxWidth)
+    {
+        maxWidth--;
+
+        if(x + width > maxWidth)
+        {
+            for (int i = 0; i < width; i++)
+            {
+                if (x + i < maxWidth)
+                    drawTexturedModalRect(x + i, y, u + i, v, 1, height);
+                else
+                    break;
+            }
+        }
+        else
+            drawTexturedModalRect(x, y, u, v, width, height);
+    }
+
+    private void drawLimitedRect(int x, int y, int sizeX, int sizeY, float r, float g, float b, float a, int maxWidth)
+    {
+        maxWidth--;
+
+        if(x + sizeX > maxWidth)
+        {
+            for (int i = 0; i < sizeX; i++)
+            {
+                if (x + i < maxWidth)
+                    drawRect(x + i, y, 1, sizeY, r, g, b, a);
+                else
+                    break;
+            }
+        }
+        else
+            drawRect(x, y, sizeX, sizeY, r, g, b, a);
+    }
+    
+    private boolean drawScaledLimitedString(Minecraft mc, String text, int x, int y, int color, float scale, int maxWidth)
+    {
+        maxWidth -= 2;
+        
+        int width = getScaledStringWidth(text, scale);
+
+        if (x + width > maxWidth)
+        {
+            while (x + width >= maxWidth && text.length() > 0)
+            {
+                text = text.substring(0, text.length() - 1);
+                
+                width = getScaledStringWidth(text, scale);
+            }
+            
+//            for (int i = 0; i < text.length(); i++)
+//            {
+//                char charAt = text.charAt(i);
+//                int charWidth = (int) ((float) fontRendererObj.getCharWidth(charAt) * 0.5F);
+//
+//                if(x + charWidth < maxWidth)
+//                {
+//                    drawScaledString(mc, String.valueOf(charAt), x, y, color, scale);
+//
+//                    x += charWidth;
+//                }
+//                else
+//                {
+//                    drawScaledString(mc, "..", x, y, color, scale);
+//                    return false;
+//                }
+//            }
+            
+            if(!text.isEmpty())
+            {
+                drawScaledString(mc, text + "..", x, y, color, scale);
+            }
+        }
+        else
+        {
+            drawScaledString(mc, text, x, y, color, scale);
+        }
+        
+        return true;
     }
 
     private int getScriptDrawWidth(String displayName)

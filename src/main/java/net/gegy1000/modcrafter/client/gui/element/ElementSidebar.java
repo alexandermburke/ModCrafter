@@ -68,7 +68,7 @@ public class ElementSidebar extends Element
         if (parent.selectedSprite != null)
         {
             String s = "Script Selection";
-            int i = (int) (mc.fontRenderer.getStringWidth(s) * 0.75F);
+            int i = (int) (parent.getScaledStringWidth(s, 0.75F));
 
             if (i + 3 < width)
             {
@@ -101,7 +101,7 @@ public class ElementSidebar extends Element
             {
                 ScriptDef def = entry.getValue();
 
-                parent.drawScript(def, 2, y, def.getName(), def.getDefualtDisplayName(), 1.0F);
+                parent.drawScript(def, 2, y, def.getName(), def.getDefualtDisplayName(), 1.0F, width);
 
                 y += scriptHeight + 2;
             }
