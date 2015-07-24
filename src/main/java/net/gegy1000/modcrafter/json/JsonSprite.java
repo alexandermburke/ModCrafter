@@ -14,7 +14,7 @@ public class JsonSprite
 {
     public String name;
 
-    public Map<Integer, JsonScript> scripts;
+    public List<JsonScript> scripts;
 
     public String type;
 
@@ -22,13 +22,13 @@ public class JsonSprite
     {
         this.name = sprite.getName();
 
-        this.scripts = new HashMap<Integer, JsonScript>();
+        this.scripts = new ArrayList<JsonScript>();
 
         this.type = sprite.getSpriteDef().getId();
 
-        for (Entry<Integer, Script> script : sprite.getScripts().entrySet())
+        for (Script script : sprite.getScripts())
         {
-            scripts.put(script.getKey(), new JsonScript(script.getValue()));
+            scripts.add(new JsonScript(script));
         }
     }
 

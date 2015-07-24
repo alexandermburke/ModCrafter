@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import javax.swing.text.StyleContext.SmallAttributeSet;
+
 import net.gegy1000.modcrafter.ModCrafterAPI;
 import net.gegy1000.modcrafter.client.gui.element.Element;
 import net.gegy1000.modcrafter.client.gui.element.ElementSidebar;
@@ -16,6 +18,7 @@ import net.gegy1000.modcrafter.mod.ModSaveManager;
 import net.gegy1000.modcrafter.mod.sprite.Sprite;
 import net.gegy1000.modcrafter.script.Script;
 import net.gegy1000.modcrafter.script.ScriptDef;
+import net.gegy1000.modcrafter.script.ScriptDefContainer;
 import net.gegy1000.modcrafter.script.ScriptDefHat;
 import net.gegy1000.modcrafter.script.parameter.DataType;
 import net.gegy1000.modcrafter.script.parameter.IParameter;
@@ -43,7 +46,7 @@ public class GuiModCrafterProject extends GuiScreen
 
     public Mod loadedMod;
 
-    public final int scriptHeight = 11;
+    public final int defualtScriptHeight = 11;
     public final int spriteWidth = 21;
 
     public Script holdingScript;
@@ -59,6 +62,7 @@ public class GuiModCrafterProject extends GuiScreen
     public ElementTopBar elementTopBar;
 
     public TextBox textBox;
+    private boolean container;
 
     public GuiModCrafterProject(GuiModCrafter modCrafterGui, Mod loadedMod)
     {
@@ -132,9 +136,9 @@ public class GuiModCrafterProject extends GuiScreen
 
         if (selectedSprite != null)
         {
-            for (Entry<Integer, Script> script : selectedSprite.getScripts().entrySet())
+            for (Script script : selectedSprite.getScripts())
             {
-                drawScript(script.getValue());
+                drawScriptAndChild(script);
             }
         }
 
@@ -144,6 +148,16 @@ public class GuiModCrafterProject extends GuiScreen
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);
+    }
+
+    private void drawScriptAndChild(Script script)
+    {
+        drawScript(script);
+
+        if (script.getChild() != null)
+        {
+            drawScript(script.getChild());
+        }
     }
 
     public void drawScript(Script script)
@@ -157,10 +171,10 @@ public class GuiModCrafterProject extends GuiScreen
             alpha = 0.8F;
         }
 
-        drawScript(script.getScriptDef(), x + elementScriptSidebar.width, script.getY() + elementTopBar.height, script.getName(), script.getDisplayName(), alpha, width);
+        drawScript(script.getScriptDef(), x + elementScriptSidebar.width, script.getY() + elementTopBar.height, script.getName(), script.getDisplayName(), alpha, width, script);
     }
 
-    public void drawScript(ScriptDef def, int xPosition, int yPosition, Object[] name, String displayName, float alpha, int maxWidth)
+    public void drawScript(ScriptDef def, int xPosition, int yPosition, Object[] name, String displayName, float alpha, int maxWidth, Script script)
     {
         int width = getScriptDrawWidth(displayName);
 
@@ -194,6 +208,27 @@ public class GuiModCrafterProject extends GuiScreen
 
             yPosition++;
         }
+        else if (def instanceof ScriptDefContainer)
+        {
+            int gap = def.getHeight(script) - 22;
+
+            drawLimitedTexturedModalRect(xPosition, yPosition, 24, 0, 12, 11, maxWidth);
+            drawLimitedTexturedModalRect(xPosition, yPosition + gap + defualtScriptHeight, 24, 12, 12, 10, maxWidth);
+
+            for (int i = 0; i < gap; i++)
+            {
+                drawLimitedTexturedModalRect(xPosition, yPosition + i + defualtScriptHeight, 24, 11, 6, 1, maxWidth);
+            }
+
+            for (int i = 0; i < width; i++)
+            {
+                drawLimitedTexturedModalRect(xPosition + 12 + (i), yPosition, 36, 0, 1, 10, maxWidth);
+                drawLimitedTexturedModalRect(xPosition + 12 + (i), yPosition + gap + defualtScriptHeight, 36, 12, 1, 10, maxWidth);
+            }
+
+            drawLimitedTexturedModalRect(xPosition + 12 + width, yPosition, 37, 0, 1, 10, maxWidth);
+            drawLimitedTexturedModalRect(xPosition + 12 + width, yPosition + gap + defualtScriptHeight, 37, 12, 1, 10, maxWidth);
+        }
         else
         {
             drawLimitedTexturedModalRect(xPosition, yPosition, 0, 0, 7, 12, maxWidth);
@@ -225,7 +260,7 @@ public class GuiModCrafterProject extends GuiScreen
                     drawLimitedRect(x - 1, yPosition + 2, textWidth + 1, 6, 1F, 1F, 1F, 0.7F * alpha, maxWidth);
                 }
 
-                if(!drawScaledLimitedString(mc, string, x, yPosition + 3, 0xCCCCCC, 0.5F, maxWidth))
+                if (!drawScaledLimitedString(mc, string, x, yPosition + 3, 0xCCCCCC, 0.5F, maxWidth))
                 {
                     break;
                 }
@@ -248,7 +283,7 @@ public class GuiModCrafterProject extends GuiScreen
     {
         maxWidth--;
 
-        if(x + width > maxWidth)
+        if (x + width > maxWidth)
         {
             for (int i = 0; i < width; i++)
             {
@@ -266,7 +301,7 @@ public class GuiModCrafterProject extends GuiScreen
     {
         maxWidth--;
 
-        if(x + sizeX > maxWidth)
+        if (x + sizeX > maxWidth)
         {
             for (int i = 0; i < sizeX; i++)
             {
@@ -279,11 +314,11 @@ public class GuiModCrafterProject extends GuiScreen
         else
             drawRect(x, y, sizeX, sizeY, r, g, b, a);
     }
-    
+
     private boolean drawScaledLimitedString(Minecraft mc, String text, int x, int y, int color, float scale, int maxWidth)
     {
         maxWidth -= 2;
-        
+
         int width = getScaledStringWidth(text, scale);
 
         if (x + width > maxWidth)
@@ -291,29 +326,29 @@ public class GuiModCrafterProject extends GuiScreen
             while (x + width >= maxWidth && text.length() > 0)
             {
                 text = text.substring(0, text.length() - 1);
-                
-                width = getScaledStringWidth(text, scale);
+
+                width = getScaledStringWidth(text + "..", scale);
             }
-            
-//            for (int i = 0; i < text.length(); i++)
-//            {
-//                char charAt = text.charAt(i);
-//                int charWidth = (int) ((float) fontRendererObj.getCharWidth(charAt) * 0.5F);
-//
-//                if(x + charWidth < maxWidth)
-//                {
-//                    drawScaledString(mc, String.valueOf(charAt), x, y, color, scale);
-//
-//                    x += charWidth;
-//                }
-//                else
-//                {
-//                    drawScaledString(mc, "..", x, y, color, scale);
-//                    return false;
-//                }
-//            }
-            
-            if(!text.isEmpty())
+
+            // for (int i = 0; i < text.length(); i++)
+            // {
+            // char charAt = text.charAt(i);
+            // int charWidth = (int) ((float) fontRendererObj.getCharWidth(charAt) * 0.5F);
+            //
+            // if(x + charWidth < maxWidth)
+            // {
+            // drawScaledString(mc, String.valueOf(charAt), x, y, color, scale);
+            //
+            // x += charWidth;
+            // }
+            // else
+            // {
+            // drawScaledString(mc, "..", x, y, color, scale);
+            // return false;
+            // }
+            // }
+
+            if (!text.isEmpty())
             {
                 drawScaledString(mc, text + "..", x, y, color, scale);
             }
@@ -322,7 +357,7 @@ public class GuiModCrafterProject extends GuiScreen
         {
             drawScaledString(mc, text, x, y, color, scale);
         }
-        
+
         return true;
     }
 
@@ -370,26 +405,50 @@ public class GuiModCrafterProject extends GuiScreen
 
         snapping = null;
 
-        for (Entry<Integer, Script> entry : selectedSprite.getScripts().entrySet())
+        for (Script script : selectedSprite.getScriptsAndChildren())
         {
-            Script script = entry.getValue();
-
             if (script != holdingScript && holdingScript.getScriptDef().canAttachTo(script) && (script.getChild() == null || script.getChild() == holdingScript))
             {
-                int yDiff = Math.abs(y - (script.getY() + scriptHeight));
+                container = false;
 
-                if (yDiff <= 4)
+                if (script.getScriptDef() instanceof ScriptDefContainer)
                 {
-                    int sWidth = getScriptWidth(script.getDisplayName());
+                    int yDiff = Math.abs(y - (script.getY() + defualtScriptHeight));
 
-                    if (x > script.getX() - 4 && x + sWidth < script.getX() + sWidth + 4)
+                    if (yDiff <= 4)
                     {
-                        x = script.getX();
-                        y = script.getY() + scriptHeight - 1;
+                        int sWidth = getScriptWidth(script.getDisplayName());
 
-                        snapping = script;
+                        if (x > script.getX() + 2 && x + sWidth < script.getX() + sWidth - 2 + 6)
+                        {
+                            x = script.getX() + 5;
+                            y = script.getY() + defualtScriptHeight - 1;
 
-                        break;
+                            snapping = script;
+                            container = true;
+
+                            break;
+                        }
+                    }
+                }
+
+                if (snapping == null)
+                {
+                    int yDiff = Math.abs(y - (script.getY() + script.getScriptDef().getHeight(script)));
+
+                    if (yDiff <= 4)
+                    {
+                        int sWidth = getScriptWidth(script.getDisplayName());
+
+                        if (x > script.getX() - 4 && x + sWidth < script.getX() + sWidth + 4)
+                        {
+                            x = script.getX();
+                            y = script.getY() + script.getScriptDef().getHeight(script) - 1;
+
+                            snapping = script;
+
+                            break;
+                        }
                     }
                 }
             }
@@ -407,11 +466,22 @@ public class GuiModCrafterProject extends GuiScreen
     {
         if (script.getChild() != null)
         {
-            y += scriptHeight - 1;
+            y += script.getScriptDef().getHeight(script) - 1;
 
             script.getChild().setPosition(x, y);
 
             moveChild(script.getChild(), x, y);
+
+            // Script contained = script.getContained();
+            //
+            // if(contained != null)
+            // {
+            // x += 5;
+            // y -= (script.getScriptDef().getHeight(script)) - defualtScriptHeight;
+            //
+            // contained.setPosition(x, y);
+            // moveChild(contained, x, y);
+            // }
         }
     }
 
@@ -433,21 +503,27 @@ public class GuiModCrafterProject extends GuiScreen
         {
             if (selectedSprite != null)
             {
-                for (Entry<Integer, Script> entry : selectedSprite.getScripts().entrySet())
+                for (Script script : selectedSprite.getScriptsAndChildren())
                 {
-                    Script script = entry.getValue();
-
                     int width = getScriptWidth(script.getDisplayName());
 
                     int x = script.getX() + elementScriptSidebar.width;
                     int y = script.getY() + elementTopBar.height;
 
-                    if (mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + scriptHeight)
+                    if (mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + script.getScriptDef().getHeight(script))
                     {
                         holdingScript = script;
 
                         heldOffsetX = x - elementScriptSidebar.width - mouseX;
                         heldOffsetY = y - elementTopBar.height - mouseY;
+
+                        if (snapping != null)
+                        {
+                            if (holdingScript.equals(snapping.getContained()))
+                            {
+                                snapping.setContained(null);
+                            }
+                        }
 
                         snapping = null;
 
@@ -465,7 +541,7 @@ public class GuiModCrafterProject extends GuiScreen
 
                         int width = getScriptWidth(def.getDefualtDisplayName());
 
-                        if (mouseX >= 2 && mouseX <= width && mouseY >= y && mouseY <= y + scriptHeight)
+                        if (mouseX >= 2 && mouseX <= width && mouseY >= y && mouseY <= y + def.getHeight(null))
                         {
                             holdingScript = new Script(selectedSprite, def, null);
 
@@ -479,7 +555,7 @@ public class GuiModCrafterProject extends GuiScreen
                             break;
                         }
 
-                        y += scriptHeight + 2;
+                        y += def.getHeight(null) + 2;
                     }
                 }
 
@@ -505,7 +581,7 @@ public class GuiModCrafterProject extends GuiScreen
                             {
                                 if (xPos >= elementScriptSidebar.width && mouseX > x - 1 && mouseX <= x - 1 + textWidth + 1)
                                 {
-                                    if (mouseY > yPos && mouseY <= yPos + scriptHeight && textBox == null)
+                                    if (mouseY > yPos && mouseY <= yPos + script.getScriptDef().getHeight(script) && textBox == null)
                                     {
                                         textBox = new TextBox(this, x - 2, yPos - 17, textWidth * 2 + 4, 12, inputParameter);
                                         textBox.text = string;
@@ -556,7 +632,19 @@ public class GuiModCrafterProject extends GuiScreen
 
         if (holdingScript != null)
         {
-            holdingScript.setParent(snapping);
+            if (container)
+            {
+                if (snapping != null)
+                {
+                    snapping.setContained(holdingScript);
+                }
+
+                container = false;
+            }
+            else
+            {
+                holdingScript.setParent(snapping);
+            }
 
             if (holdingScript.getX() < 0)
             {

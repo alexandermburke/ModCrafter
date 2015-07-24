@@ -67,9 +67,11 @@ public class GuiModCrafter extends GuiScreen
 
         this.buttonList.add(new GuiModCrafterButton(0, 10, this.height - 10 - 20, 72, 20, I18n.format("gui.cancel", new Object[0])));
 
-        this.loadMod = new GuiModCrafterButton(1, 84, this.height - 10 - 20, 72, 20, "Load Mod");
+        this.loadMod = new GuiModCrafterButton(1, 158, this.height - 10 - 20, 72, 20, "Load Mod");
         this.loadMod.enabled = false;
         this.buttonList.add(loadMod);
+
+        this.buttonList.add(new GuiModCrafterButton(2, 84, this.height - 10 - 20, 72, 20, "Create Mod"));
 
         this.modsGui = new GuiModList();
         this.modsGui.registerScrollButtons(4, 5);
@@ -88,6 +90,10 @@ public class GuiModCrafter extends GuiScreen
         else if (button.id == 1)
         {
             loadMod(selectedMod);
+        }
+        else if (button.id == 2)
+        {
+            this.mc.displayGuiScreen(new GuiCreateMod(this));
         }
         else
         {

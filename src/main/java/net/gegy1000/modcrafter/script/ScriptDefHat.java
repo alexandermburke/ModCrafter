@@ -16,4 +16,10 @@ public abstract class ScriptDefHat extends ScriptDef
     {
         return false;
     }
+
+    @Override
+    public int getHeight(Script script)
+    {
+        return 11;
+    }
 }

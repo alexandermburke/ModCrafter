@@ -1,7 +1,7 @@
 package net.gegy1000.modcrafter;
 
 import net.gegy1000.modcrafter.common.proxy.CommonProxy;
-import net.gegy1000.modcrafter.mod.sprite.SpriteDefItem;
+import net.gegy1000.modcrafter.mod.sprite.SpriteDefMod;
 import net.gegy1000.modcrafter.script.ScriptDefHatTest;
 import net.gegy1000.modcrafter.script.ScriptDefManager;
 import net.gegy1000.modcrafter.script.ScriptDefPrintConsole;
@@ -32,7 +32,7 @@ public class ModCrafter
         proxy.preInit();
 
         ScriptDefManager.init();
-        ModCrafterAPI.registerSpriteDef(new SpriteDefItem());
+        ModCrafterAPI.registerSpriteDef(new SpriteDefMod());
     }
 
     @EventHandler

@@ -34,4 +34,10 @@ public class ScriptDefPrintConsole extends ScriptDef
     {
         return true;
     }
+
+    @Override
+    public int getHeight(Script script)
+    {
+        return 11;
+    }
 }

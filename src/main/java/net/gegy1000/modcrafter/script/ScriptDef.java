@@ -15,6 +15,8 @@ public abstract class ScriptDef
 
     public abstract boolean isAllowedFor(Sprite sprite);
 
+    public abstract int getHeight(Script script);
+
     public boolean canAttachTo(Script script)
     {
         return true;

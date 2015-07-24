@@ -1,7 +1,7 @@
 package net.gegy1000.modcrafter.mod.sprite;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import net.gegy1000.modcrafter.ModCrafterAPI;
@@ -14,15 +14,13 @@ import net.gegy1000.modcrafter.script.ScriptDefHat;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 public class Sprite
 {
     private String name;
     private final Mod mod;
 
-    private Map<Integer, Script> scripts = Maps.newHashMap();
-    private List<Script> hatScripts = Lists.newArrayList();
+    private List<Script> scripts = Lists.newArrayList();
 
     private SpriteDef def;
 
@@ -40,18 +38,11 @@ public class Sprite
         this.def = ModCrafterAPI.getSpriteById(jsonSprite.type);
         this.name = jsonSprite.name;
 
-        for (Entry<Integer, JsonScript> entry : jsonSprite.scripts.entrySet())
+        for (JsonScript script : jsonSprite.scripts)
         {
-            JsonScript script = entry.getValue();
+            Script newScript = script.toScript(this, null);
 
-            Script newScript = script.toScript(this);
-
-            scripts.put(entry.getKey(), newScript);
-
-            if (newScript.getScriptDef() instanceof ScriptDefHat)
-            {
-                hatScripts.add(newScript);
-            }
+            scripts.add(newScript);
         }
     }
 
@@ -60,13 +51,23 @@ public class Sprite
         return def;
     }
 
-    public Map<Integer, Script> getScripts()
+    public List<Script> getScripts()
     {
         return scripts;
     }
 
     public List<Script> getHatScripts()
     {
+        List<Script> hatScripts = new ArrayList<Script>();
+
+        for (Script script : scripts)
+        {
+            if (script.getScriptDef() instanceof ScriptDefHat)
+            {
+                hatScripts.add(script);
+            }
+        }
+
         return hatScripts;
     }
 
@@ -74,19 +75,7 @@ public class Sprite
     {
         if (script != null)
         {
-            if (script.getScriptDef() instanceof ScriptDefHat)
-            {
-                this.hatScripts.add(script);
-            }
-
-            Integer id = 0;
-
-            while (this.scripts.containsKey(id))
-            {
-                id++;
-            }
-
-            this.scripts.put(id, script);
+            this.scripts.add(script);
         }
     }
 
@@ -94,9 +83,17 @@ public class Sprite
     {
         if (script != null)
         {
-            scripts.remove(getScriptId(script));
+            int scriptId = getScriptId(script);
 
-            removeScript(script.getChild());
+            if (scriptId >= 0)
+            {
+                scripts.remove(scriptId);
+
+                if (script.getChild() != null)
+                {
+                    removeScript(script.getChild());
+                }
+            }
         }
     }
 
@@ -107,15 +104,7 @@ public class Sprite
 
     public int getScriptId(Script script)
     {
-        for (Entry<Integer, Script> entry : scripts.entrySet())
-        {
-            if (entry.getValue().equals(script))
-            {
-                return entry.getKey();
-            }
-        }
-
-        return -1;
+        return scripts.indexOf(script);
     }
 
     public Mod getMod()
@@ -147,5 +136,27 @@ public class Sprite
         }
 
         return false;
+    }
+
+    public List<Script> getScriptsAndChildren()
+    {
+        List<Script> scripts = new ArrayList<Script>();
+
+        for (Script script : this.scripts)
+        {
+            getScriptAndChild(script, scripts);
+        }
+
+        return scripts;
+    }
+
+    private void getScriptAndChild(Script script, List<Script> scripts)
+    {
+        scripts.add(script);
+
+        if (script.getChild() != null)
+        {
+            getScriptAndChild(script.getChild(), scripts);
+        }
     }
 }

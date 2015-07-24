@@ -89,7 +89,7 @@ public class ElementSidebar extends Element
             }
 
             int y = 12;
-            int scriptHeight = parent.scriptHeight;
+            int scriptHeight = parent.defualtScriptHeight;
             double scale = (double) width / (double) (scriptHeight * 4 - 1);
 
             GL11.glPushMatrix();
@@ -101,9 +101,9 @@ public class ElementSidebar extends Element
             {
                 ScriptDef def = entry.getValue();
 
-                parent.drawScript(def, 2, y, def.getName(), def.getDefualtDisplayName(), 1.0F, width);
+                parent.drawScript(def, 2, y, def.getName(), def.getDefualtDisplayName(), 1.0F, width, null);
 
-                y += scriptHeight + 2;
+                y += entry.getValue().getHeight(null) + 2;
             }
 
             GL11.glPopMatrix();
