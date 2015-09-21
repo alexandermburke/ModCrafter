@@ -152,7 +152,6 @@ public class GuiCreateMod extends GuiScreen
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         float f = 32.0F;
         tessellator.startDrawingQuads();
-        // tessellator.setColorOpaque_I(4210752);
         tessellator.addVertexWithUV(0.0D, (double) this.height, 0.0D, 0.0D, (double) ((float) this.height / f + (float) p_146278_1_));
         tessellator.addVertexWithUV((double) this.width, (double) this.height, 0.0D, (double) ((float) this.width / f), (double) ((float) this.height / f + (float) p_146278_1_));
         tessellator.addVertexWithUV((double) this.width, 0.0D, 0.0D, (double) ((float) this.width / f), (double) p_146278_1_);
